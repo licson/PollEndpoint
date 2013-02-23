@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Licson's Poll</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<style type="text/css">
+		body {
+			padding-top: 20px;
+			padding-bottom: 40px;
+		}
+		
+		/* Custom container */
+		.container-narrow {
+			margin: 0 auto;
+			max-width: 700px;
+		}
+		.container-narrow > hr {
+			margin: 30px 0;
+		}
+		
+		/* Main marketing message and sign up button */
+		.jumbotron {
+			margin: 60px 0;
+			text-align: center;
+		}
+		.jumbotron h1 {
+			font-size: 72px;
+			line-height: 1;
+		}
+		.jumbotron .btn {
+			font-size: 21px;
+			padding: 14px 24px;
+		}
+		
+		/* Supporting marketing content */
+		.marketing {
+			margin: 60px 0;
+		}
+		.marketing p + h4 {
+			margin-top: 28px;
+		}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script>
+		$(function(){
+			var id;
+			$('#basic_info').submit(function(e){
+				e.preventDefault();
+				$.ajax({
+					url:'/create/save/basic_info',
+					type:'POST',
+					dataType:'json',
+					data:$('#basic_info').serialize(),
+					success:function(data){
+						if(data.success){
+							id = data.id;
+							$('html,body').animate({
+								scrollTop:$('#questions_set').offset().top
+							},'fast');
+						}
+					}
+				});
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<div class="container-narrow">
+			<div class="masthead">
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">About</a></li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+			<h3 class="muted">Licson's Poll</h3>
+		</div>
+		<hr>
+		<div class="jumbotron">
+			<h1>Create a Poll</h1>
+			<p>Start creating a poll here.</p>
+		</div>
+		<hr>
+		<div class="row-fluid">
+			<div class="span4" id="step_1">
+				<h4>First Step</h4>
+				<p>Enter the basic information about the questionnaire.</p>
+				<form id="basic_info">
+					<input type="text" name="name" placeholder="The name of the poll" />
+					<input type="text" name="keywords" placeholder="Keywords of your poll (For search engines)" />
+					<textarea name="desc" placeholder="Description"></textarea>
+					<button id="proceed_1" class="btn">Proceed</button>
+				</form>
+			</div>
+			<div class="span4">
+				<h4>Second Step</h4>
+				<p>Set the questions of your poll</p>
+			</div>
+			<div class="span4">
+				<h4>Step 3</h4>
+				<p>Submit your poll</p>
+				<button class="btn" id="send">Submit</button>
+			</div>
+		</div>
+		<hr>
+		<div id="questions_set">
+			<h3>Set the questions</h3>
+		</div>
+		<hr>
+		<div class="footer">
+			<p>&copy; Licson's Poll <%= (new Date).getFullYear() %></p>
+		</div>
+	</body>
+</html>
