@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Licson's Poll</title>
+		<title>PollEndpoint</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -45,25 +45,63 @@
 		</style>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
 		<script>
 		$(function(){
 			var id;
-			$('#basic_info').submit(function(e){
-				e.preventDefault();
-				$.ajax({
-					url:'/create/save/basic_info',
-					type:'POST',
-					dataType:'json',
-					data:$('#basic_info').serialize(),
-					success:function(data){
-						if(data.success){
-							id = data.id;
-							$('html,body').animate({
-								scrollTop:$('#questions_set').offset().top
-							},'fast');
-						}
+			var step_1_completed = false, step_2_completed = false;
+			$('input,select[title]').tooltip();
+			$('#status .alert .close').click(function(){
+				$('#status .alert').hide(500);
+			});
+			$('#basic_info').ajaxForm({
+				dataType:'json',
+				success:function(response){
+					if(response.success){
+						id = response.id;
+						$('.p_id').val(response.id);
+						step_1_completed = true;
+						$('html,body').animate({scrollTop:$('#question_form').offset().top},500);
 					}
-				});
+					else {
+						$('#status .alert .message').text(response.message);
+						$('#status .alert').show(500);
+					}
+				}
+			});
+			$('#question_form').submit(function(e){
+				e.preventDefault();
+				if(step_1_completed){
+					$('#question_form').ajaxSubmit({
+						dataType:'json',
+						success:function(response){
+							if(response.success){
+								step_2_completed = true;
+							}
+							else {
+								$('#status .alert .message').text(response.message);
+								$('#status .alert').show(500);
+							}
+						}
+					});
+				}
+				else {
+					$('#status .alert .message').text('Please complete step 1 first.');
+					$('#status .alert').show(500);
+				}
+			});
+			$('#send').click(function(e){
+				if(step_1_completed && step_2_completed){
+					window.location.href = "/question/"+id+'?created=1';
+				}
+				else {
+					$('#status .alert .message').text('Please complete step 1 and 2 first.');
+					$('#status .alert').show(500);
+				}
+			});
+			$('#add').click(function(){
+				$('.question:first').clone().appendTo('#question_sets');
+				$('.p_id').val(id);
 			});
 		});
 		</script>
@@ -72,11 +110,11 @@
 		<div class="container-narrow">
 			<div class="masthead">
 				<ul class="nav nav-pills pull-right">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Contact</a></li>
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
 				</ul>
-			<h3 class="muted">Licson's Poll</h3>
+			<h3 class="muted">PollEndpoint</h3>
 		</div>
 		<hr>
 		<div class="jumbotron">
@@ -84,19 +122,25 @@
 			<p>Start creating a poll here.</p>
 		</div>
 		<hr>
+		<div id="status">
+			<div class="alert" style="display:none;">
+				<a href="#" class="close">&times;</a>
+				<strong>Warning!</strong> <span class="message"></span>
+			</div>
+		</div>
 		<div class="row-fluid">
 			<div class="span4" id="step_1">
 				<h4>First Step</h4>
 				<p>Enter the basic information about the questionnaire.</p>
-				<form id="basic_info">
+				<form id="basic_info" action="/create/save/basic_info" method="POST">
 					<input type="text" name="name" placeholder="The name of the poll" />
 					<input type="text" name="keywords" placeholder="Keywords of your poll (For search engines)" />
 					<textarea name="desc" placeholder="Description"></textarea>
-					<button id="proceed_1" class="btn">Proceed</button>
+					<input type="submit" id="proceed_1" class="btn" value="Proceed" />
 				</form>
 			</div>
 			<div class="span4">
-				<h4>Second Step</h4>
+				<h4>Step 2</h4>
 				<p>Set the questions of your poll</p>
 			</div>
 			<div class="span4">
@@ -106,12 +150,37 @@
 			</div>
 		</div>
 		<hr>
-		<div id="questions_set">
+		<div>
 			<h3>Set the questions</h3>
+			<button id="add" class="btn pull-right">Add questions</button>
+			<form action="/create/save/questions" method="POST" id="question_form">
+				<div id="question_sets">
+					<div class="question well">
+						<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
+						<label>Title 
+							<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
+						</label>
+						<label>Type of the question 
+							<select name="questions[type]" title="Type of question">
+								<option value="fillin">Fill in the blanks</option>
+								<option value="mc">Multiple Choices</option>
+								<option value="mmc">Multiple Answers</option>
+							</select>
+						</label>
+						<label>Choices (Only for Multiple Choices and Multiple Answers) 
+							<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
+						</label>
+						<label>Required 
+							<input type="checkbox" name="questions[required]" value="1"/>
+						</label>
+					</div>
+				</div>
+				<input type="submit" id="proceed_2" class="btn" value="Proceed"/>
+			</form>
 		</div>
 		<hr>
 		<div class="footer">
-			<p>&copy; Licson's Poll <%= (new Date).getFullYear() %></p>
+			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
 	</body>
 </html>

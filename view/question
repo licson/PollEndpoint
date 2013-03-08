@@ -1,11 +1,13 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Licson's Poll</title>
+		<title><%= meta[0].name %> - PollEndpoint</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
-		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<meta name="keywords" content="<%= meta[0].keywords %>" />
+		<meta name="description" content="<%= meta[0].desc %>">
+		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<style type="text/css">
 		body {
 			padding-top: 20px;
@@ -23,8 +25,10 @@
 		
 		/* Main marketing message and sign up button */
 		.jumbotron {
-			margin: 60px 0;
+			margin: 20px 0;
+			padding: 1em;
 			text-align: center;
+			box-shadow: 0px 0px 3em #ccc inset, 0px 0px 20px 5px #ccc;
 		}
 		.jumbotron h1 {
 			font-size: 72px;
@@ -45,30 +49,47 @@
 		.question {
 			border-bottom: #ccc 1px solid;
 			padding: 1em;
+			margin-bottom: 1em;
 		}
 		</style>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
-		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
+		<script>
+		$(function(){
+			$('#answer').ajaxForm({
+				dataType:'json',
+				success:function(data){
+					if(data.success){
+						window.location.href = "/thanks";
+					}
+				}
+			});
+		});
+		</script>
 	</head>
 	<body>
 		<div class="container-narrow">
 			<div class="masthead">
 				<ul class="nav nav-pills pull-right">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Contact</a></li>
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
 				</ul>
-			<h3 class="muted">Licson's Poll</h3>
+			<h3 class="muted">PollEndpoint</h3>
 		</div>
 		<hr>
-		<div class="jumbotron">
-			<h1><%= meta.name %></h1>
-			<p class="lead"><%= meta.desc %></p>
+		<div class="jumbotron" itemscope itemtype="http://schema.org/WPHeader">
+			<h1 itemprop="name"><%= meta[0].name %></h1>
+			<p class="lead" itemprop="description"><%= meta[0].desc %></p>
 		</div>
 		<hr>
 		<div>
-			<form action="/questions/<%= id %>/submit">
-				<% questions.forEach(function(i){
+			<a class="btn pull-right" href="../stats/<%= id %>">Statistics</a>
+			<h2>Questions</h2>
+			<form action="./<%= id %>/submit" method="POST" id="answer">
+				<%
+				for(var i = 0; i < questions.length; i++){
 					var q = questions[i];
 				%>
 				<div class="question" data-id="<%= q.id %>" data-required="<%= q.required %>">
@@ -81,34 +102,40 @@
 					<% 	break;
 						
 						case "mc":
-						var choices = q.choices.solit(',');
-						choices.forEach(function(i){
-							var choice = choices[i];
+						var choices = q.choices.split(',');
+						
+						for(var j = 0; j < choices.length; j++){
+							var choice = choices[j];
 					%>
-					<input type="radio" name="<%= q.id %>" value="<%= choice %>" />
+					<label for="<%= q.id+'_'+j %>" class="radio">
+						<input type="radio" name="<%= q.id %>" id="<%= q.id+'_'+j %>" value="<%= choice %>" /> <%= choice %>
+					</label>
 					<%
-						});
+						}
 						break;
 						
 						case "mmc":
-						var choices = q.choices.solit(',');
-						choices.forEach(function(i){
-							var choice = choices[i];
+						var choices = q.choices.split(',');
+						
+						for(var j = 0; j < choices.length; j++){
+							var choice = choices[j];
 					%>
-					<input type="checkbox" name="<%= q.id %>[]" value="<%= choice %>" />
+					<label for="<%= q.id+'_'+j %>" class="checkbox">
+						<input type="checkbox" name="<%= q.id %>[]" id="<%= q.id+'_'+j %>" value="<%= choice %>" /> <%= choice %>
+					</label>
 					<%
-						});
+						}
 						break;
 					}
 					%>
 				</div>
-				<% }); %>
+				<% } %>
 				<button class="btn btn-large">Submit</button>
 			</form>
 		</div>
 		<hr>
 		<div class="footer">
-			<p>&copy; Licson's Poll <%= (new Date).getFullYear() %></p>
+			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
 	</body>
 </html>

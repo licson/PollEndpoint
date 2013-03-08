@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+	<head>
+		<title>PollEndpoint</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<style type="text/css">
+		body {
+			padding-top: 20px;
+			padding-bottom: 40px;
+		}
+		
+		/* Custom container */
+		.container-narrow {
+			margin: 0 auto;
+			max-width: 700px;
+		}
+		.container-narrow > hr {
+			margin: 30px 0;
+		}
+		
+		/* Main marketing message and sign up button */
+		.jumbotron {
+			margin: 60px 0;
+			text-align: center;
+		}
+		.jumbotron h1 {
+			font-size: 72px;
+			line-height: 1;
+		}
+		.jumbotron .btn {
+			font-size: 21px;
+			padding: 14px 24px;
+		}
+		
+		/* Supporting marketing content */
+		.marketing {
+			margin: 60px 0;
+		}
+		.marketing p + h4 {
+			margin-top: 28px;
+		}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container-narrow">
+			<div class="masthead">
+				<ul class="nav nav-pills pull-right">
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
+				</ul>
+			<h3 class="muted">PollEndpoint</h3>
+		</div>
+		<hr>
+		<div class="jumbotron">
+			<h1>PollEndpoint</h1>
+			<p class="lead">Thanks for filling in this poll.</p>
+		</div>
+		<hr>
+		<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
+		<div class="row-fluid marketing">
+			<div class="span6">
+				<h4>Hi Performance</h4>
+				<p>PollEndpoint uses node.js, a platform for data-intensive applications, to handle the load. It's highly-scalable and event-driven that makes it fast and reliable.</p>
+				
+				<h4>Search engines optimized</h4>
+				<p>PollEndpoint is optimized for search engines to allow your questions to be spread widely.</p>
+				<p>We adopt the use of HTML5 microdata to let search engines have a better understanding of the questions.</p>
+			</div>
+			<div class="span6">
+				<h4>Easy to setup</h4>
+				<p>No accounts required. Just create the questions and that's it. (Statistics are public to everyone)</p>
+				
+				<h4>User-friendly interface</h4>
+				<p>Answer your questions in a natural way! No ads on every page and we'll never have ads.</p>
+			</div>
+		</div>
+		<hr>
+		<div class="footer">
+			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
+		</div>
+	</body>
+</html>
