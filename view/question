@@ -51,18 +51,29 @@
 			padding: 1em;
 			margin-bottom: 1em;
 		}
+		label.error {
+			color: red;
+			position:relative;
+			left: 2em;
+			top: 0;
+		}
 		</style>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
+		<script type="text/javascript" src="../assets/js/jquery.validate.min.js"></script>
 		<script>
 		$(function(){
-			$('#answer').ajaxForm({
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						window.location.href = "/thanks";
-					}
+			$('#answer').validate({
+				submitHandler:function(form){
+					$('#answer').ajaxSubmit({
+						dataType:'json',
+						success:function(data){
+							if(data.success){
+								window.location.href = "/thanks";
+							}
+						}
+					});
 				}
 			});
 		});
@@ -92,13 +103,13 @@
 				for(var i = 0; i < questions.length; i++){
 					var q = questions[i];
 				%>
-				<div class="question" data-id="<%= q.id %>" data-required="<%= q.required %>">
+				<div class="question" data-id="<%= q.id %>">
 					<p class="lead"><span><%= i+1 %>.</span> <%= q.name %></p>
 					<% 
 					switch(q.type){
 						case "fillin":
 					%>
-					<input type="text" name="<%= q.id %>" placeholder="Type here..."/>
+					<input type="text" name="<%= q.id %>" placeholder="Type here..." class="<%= q.required ? 'required' : '' %>"/>
 					<% 	break;
 						
 						case "mc":
@@ -108,7 +119,7 @@
 							var choice = choices[j];
 					%>
 					<label for="<%= q.id+'_'+j %>" class="radio">
-						<input type="radio" name="<%= q.id %>" id="<%= q.id+'_'+j %>" value="<%= choice %>" /> <%= choice %>
+						<input type="radio" name="<%= q.id %>" id="<%= q.id+'_'+j %>" value="<%= choice %>" class="<%= q.required ? 'required' : '' %>"/> <%= choice %>
 					</label>
 					<%
 						}
@@ -121,7 +132,7 @@
 							var choice = choices[j];
 					%>
 					<label for="<%= q.id+'_'+j %>" class="checkbox">
-						<input type="checkbox" name="<%= q.id %>[]" id="<%= q.id+'_'+j %>" value="<%= choice %>" /> <%= choice %>
+						<input type="checkbox" name="<%= q.id %>[]" id="<%= q.id+'_'+j %>" value="<%= choice %>" class="<%= q.required ? 'required' : '' %>"/> <%= choice %>
 					</label>
 					<%
 						}

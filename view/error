@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>PollEndpoint</title>
+		<title>Error</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -58,26 +58,18 @@
 		</div>
 		<hr>
 		<div class="jumbotron">
-			<h1>PollEndpoint</h1>
-			<p class="lead">High performance, open-source question platform by Licson Lee.</p>
-			<a class="btn btn-large btn-success" href="/create">Try it today!</a>
+			<h1>Oops.</h1>
+			<p class="lead">Something wrong happened.</p>
 		</div>
 		<hr>
-		<div>
-			<h3>Latest Polls</h3>
-			<% if(polls.length){ %>
-			<ul class="nav nav-pills nav-stacked">
-				<%
-				for(var i = 0; i < polls.length; i++){
-				%>
-				<li><a href="question/<%= polls[i].id %>"><%= polls[i].name %></a></li>
-				<% } %>
-			</ul>
-			<% } else { %>
-			<em class="muted">No polls recently</em>
-			<% } %>
-		</div>
+		<p>There are some possible reasons:</p>
+		<ol>
+			<li>You're going to a page that does not exist.</li>
+			<li>We have encountered a database error.</li>
+			<li>You're naughty and try to hack the system.</li>
+		</ol>
 		<hr>
+		<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
 		<div class="row-fluid marketing">
 			<div class="span6">
 				<h4>Hi Performance</h4>
@@ -93,7 +85,6 @@
 				
 				<h4>User-friendly interface</h4>
 				<p>Answer your questions in a natural way! No ads on every page and we'll never have ads.</p>
-				<p>Also, we provide easy-to-read yet advanced statistics to you.</p>
 			</div>
 		</div>
 		<hr>

@@ -77,6 +77,7 @@
 						success:function(response){
 							if(response.success){
 								step_2_completed = true;
+								$('html,body').animate({scrollTop:0},500);
 							}
 							else {
 								$('#status .alert .message').text(response.message);
@@ -100,7 +101,7 @@
 				}
 			});
 			$('#add').click(function(){
-				$('.question:first').clone().appendTo('#question_sets');
+				$('.question:last').clone().appendTo('#question_sets');
 				$('.p_id').val(id);
 			});
 		});
@@ -171,7 +172,7 @@
 							<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
 						</label>
 						<label>Required 
-							<input type="checkbox" name="questions[required]" value="1"/>
+							<input type="checkbox" name="questions[required]" checked/>
 						</label>
 					</div>
 				</div>

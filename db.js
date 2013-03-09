@@ -35,5 +35,6 @@ module.exports = {
 		});
 		
 		return conn;
-	}
+	},
+	escape:mysql.escape
 };

@@ -62,7 +62,7 @@
 			<p class="lead">About</p>
 		</div>
 		<hr>
-		<div>
+		<div class="marketing">
 			<h3>About us</h3>
 			<p>Hi! I'm the site's creator, Licson Lee. This site is for people to make polls, questionaires and surveys in no time.</p>
 			<h4>Motivation</h4>
@@ -70,6 +70,9 @@
 			<p>Therefore, I want to create a survey service that is easy to use and manange. PollEndpoint is the final product that I've made.</p>
 			<h4>Support & Ideas</h4>
 			<p>Currently we don't have a medium to collect ideas and user support. However, if you have any problems while using PollEndpoint, feel free to email me <a href="mailto:licson0729@gmail.com">(licson0729@gmail.com)</a>.</p>
+			<p>If you found problems with my code or want to suggest new features, you can also submit an issue on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a>.</p>
+			<h4>PollEndpoint is open-source</h4>
+			<p>I think I forget to tell you something. PollEndpoint is open-source. If you're interested about how I wrote this, you can have a look at the repository on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a></p>
 		</div>
 		<hr>
 		<div class="footer">
