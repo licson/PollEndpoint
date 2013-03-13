@@ -43,7 +43,7 @@
 			margin-top: 28px;
 		}
 		</style>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
 		<script>
@@ -61,7 +61,7 @@
 						id = response.id;
 						$('.p_id').val(response.id);
 						step_1_completed = true;
-						$('html,body').animate({scrollTop:$('#question_form').offset().top},500);
+						$('#ques_dialog').modal('show');
 					}
 					else {
 						$('#status .alert .message').text(response.message);
@@ -69,8 +69,7 @@
 					}
 				}
 			});
-			$('#question_form').submit(function(e){
-				e.preventDefault();
+			$('#proceed_2').click(function(){
 				if(step_1_completed){
 					$('#question_form').ajaxSubmit({
 						dataType:'json',
@@ -103,6 +102,11 @@
 			$('#add').click(function(){
 				$('.question:last').clone().appendTo('#question_sets');
 				$('.p_id').val(id);
+			});
+			$(window).on('beforeunload',function(e){
+				if(!window.confirm('Are you sure you want to leave?')){
+					e.preventDefault();
+				}
 			});
 		});
 		</script>
@@ -143,6 +147,7 @@
 			<div class="span4">
 				<h4>Step 2</h4>
 				<p>Set the questions of your poll</p>
+				<a href="#ques_dialog" data-toggle="modal" class="btn">Set the questions</a>
 			</div>
 			<div class="span4">
 				<h4>Step 3</h4>
@@ -152,36 +157,56 @@
 		</div>
 		<hr>
 		<div>
-			<h3>Set the questions</h3>
-			<button id="add" class="btn pull-right">Add questions</button>
-			<form action="/create/save/questions" method="POST" id="question_form">
-				<div id="question_sets">
-					<div class="question well">
-						<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
-						<label>Title 
-							<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
-						</label>
-						<label>Type of the question 
-							<select name="questions[type]" title="Type of question">
-								<option value="fillin">Fill in the blanks</option>
-								<option value="mc">Multiple Choices</option>
-								<option value="mmc">Multiple Answers</option>
-							</select>
-						</label>
-						<label>Choices (Only for Multiple Choices and Multiple Answers) 
-							<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
-						</label>
-						<label>Required 
-							<input type="checkbox" name="questions[required]" checked/>
-						</label>
-					</div>
+			<div class="modal hide fade" id="ques_dialog">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3>Set the questions</h3>
 				</div>
-				<input type="submit" id="proceed_2" class="btn" value="Proceed"/>
-			</form>
+				<div class="modal-body">
+					<button id="add" class="btn pull-right">Add questions</button>
+					<form action="/create/save/questions" method="POST" id="question_form">
+						<div id="question_sets">
+							<div class="question well">
+								<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
+								<label>Title 
+									<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
+								</label>
+								<label>Type of the question 
+									<select name="questions[type]" title="Type of question">
+										<option value="fillin">Fill in the blanks</option>
+										<option value="mc">Multiple Choices</option>
+										<option value="mmc">Multiple Answers</option>
+									</select>
+								</label>
+								<label>Choices (Only for Multiple Choices and Multiple Answers) 
+									<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
+								</label>
+									<label>Required 
+									<input type="checkbox" name="questions[required]" checked/>
+								</label>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<a href="#" id="proceed_2" class="btn" data-dismiss="modal">Proceed</a>
+				</div>
+			</div>
 		</div>
 		<hr>
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
+		<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-39218046-1']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
 	</body>
 </html>

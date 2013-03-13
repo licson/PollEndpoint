@@ -1,0 +1,35 @@
+{
+  "name": "PollEndpoint",
+  "version": "1.0.0",
+  "description": "Open-source poll platform",
+  "keywords": [
+    "PollEndpoint",
+    "Node.js",
+    "poll",
+    "survey",
+	"questionnaire"
+  ],
+  "author": {
+    "name": "Licson Lee",
+    "email": "licson0729@gmail.com",
+    "url":  "http://serve-licson.net23.net/"
+  },
+  "homepage": "http://pollendpoint-licson.rhcloud.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/licson0729/PollEndpoint"
+  },
+
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+
+  "private": true,
+  "main": "index.js"
+}

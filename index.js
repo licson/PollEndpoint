@@ -52,7 +52,7 @@ app.get('/question/:id',function(req,res){
 		}
 		else {
 			meta = info;
-			conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,data){
+			conn.query('SELECT * FROM `questions` WHERE `belongs` = ?',[req.params.id],function(err,data){
 				if(err){
 					res.send(view.error());
 				}
@@ -263,6 +263,6 @@ app.get('/stats/question/:id/search',function(req,res){
 	});
 });
 
-http.listen(process.env.PORT||8000);
+http.listen(process.env.OPENSHIFT_INTERNAL_PORT||8000,process.env.OPENSHIFT_INTERNAL_IP||'127.0.0.1');
 //https.listen(443);
 console.log('Server listening at port %s',process.env.PORT||8000);
