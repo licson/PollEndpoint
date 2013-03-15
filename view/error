@@ -68,6 +68,7 @@
 			<li>We have encountered a database error.</li>
 			<li>You're naughty and try to hack the system.</li>
 		</ol>
+		<em class="muted"><%= typeof err !== "undefined" && err.toString() %></em>
 		<hr>
 		<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
 		<div class="row-fluid marketing">

@@ -1,6 +1,14 @@
-var express = require('express');
+/*
+* PollEndpoint © 2013 -
+* Created By Licson Lee (licson0729@gmail.com)
+*/
+
+//Database stuff
 var db = require('./db.js');
-var conn = db.init();
+var sql = new db.driver();
+
+//Express web server and related stuff
+var express = require('express');
 var view = require('./view.js');
 var app = express();
 var http = require('http').createServer(app);
@@ -26,9 +34,9 @@ app.use('/assets',express.static(__dirname+'/assets/'));
 app.use(express.bodyParser());
 
 app.get('/',function(req,res){
-	conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC',function(err,data){
+	sql.conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC',function(err,data){
 		if(err){
-			res.send(view.error());
+			res.send(view.error(err));
 		}
 		else {
 			res.send(view.page('index',{polls:data}));
@@ -46,15 +54,15 @@ app.get('/about',function(req,res){
 
 app.get('/question/:id',function(req,res){
 	var meta;
-	conn.query('SELECT * FROM `polls` WHERE `id` = ?',[req.params.id],function(err,info){
+	sql.conn.query('SELECT * FROM `polls` WHERE `id` = ?',[req.params.id],function(err,info){
 		if(err){
-			res.send(view.error());
+			res.send(view.error(err));
 		}
 		else {
 			meta = info;
-			conn.query('SELECT * FROM `questions` WHERE `belongs` = ?',[req.params.id],function(err,data){
+			sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,data){
 				if(err){
-					res.send(view.error());
+					res.send(view.error(err));
 				}
 				else {
 					res.send(view.page('question',{
@@ -77,7 +85,7 @@ app.post('/question/:id/submit',function(req,res){
 			id:genID(40),
 			value:typeof req.body[q] !== "string" ? req.body[q].join(',') : req.body[q]
 		};
-		conn.query('INSERT INTO `answers` SET ?',data,function(err){
+		sql.conn.query('INSERT INTO `answers` SET ?',data,function(err){
 			if(err){
 				success = false;
 			}
@@ -95,7 +103,7 @@ app.post('/create/save/basic_info',function(req,res){
 	var data = req.body;
 	data.id = genID(25);
 	if(!(data.name == '' || data.desc == '' || data.keywords == '')){
-		conn.query('INSERT INTO `polls` SET ?',data,function(err){
+		sql.conn.query('INSERT INTO `polls` SET ?',data,function(err){
 			if(!err){
 				res.json({success:true,id:data.id});
 			}
@@ -121,7 +129,7 @@ app.post('/create/save/questions',function(req,res){
 			required:req.body.questions.required[i],
 			id:genID(40)
 		};
-		conn.query('INSERT INTO `questions` SET ?',q,function(err){
+		sql.conn.query('INSERT INTO `questions` SET ?',q,function(err){
 			if(err){
 				success = false
 			}
@@ -136,26 +144,26 @@ app.post('/create/save/questions',function(req,res){
 
 app.get('/stats/:id',function(req,res){
 	var id = req.params.id;
-	conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,questions){
+	sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,questions){
 		if(err){
-			res.send(view.error());
+			res.send(view.error(err));
 		}
 		else {
-			conn.query('SELECT count(*) AS `count` FROM `answers` WHERE `poll_id` = ?',[id],function(err,data){
+			sql.conn.query('SELECT count(*) AS `count` FROM `answers` WHERE `poll_id` = ?',[id],function(err,data){
 				if(err){
-					res.send(view.error());
+					res.send(view.error(err));
 				}
 				else {
 					var t_count = typeof data[0] == "undefined" ? 0 : data[0].count;
-					conn.query('SELECT count(*) AS `count` FROM (SELECT DISTINCT `poll_id`, `question_id` FROM `answers`) AS q WHERE q.`poll_id` = ? GROUP BY q.`poll_id`',[id],function(err,data){
+					sql.conn.query('SELECT count(*) AS `count` FROM (SELECT DISTINCT `poll_id`, `question_id` FROM `answers`) AS q WHERE q.`poll_id` = ? GROUP BY q.`poll_id`',[id],function(err,data){
 						if(err){
-							res.send(view.error());
+							res.send(view.error(err));
 						}
 						else {
 							var q_count = typeof data[0] == "undefined" ? 1 : data[0].count;
-							conn.query('SELECT * FROM `polls` WHERE `id` = ?',[id],function(err,meta){
+							sql.conn.query('SELECT * FROM `polls` WHERE `id` = ?',[id],function(err,meta){
 								if(err){
-									res.send(view.error());
+									res.send(view.error(err));
 								}
 								else {
 									res.send(view.page('stats',{
@@ -178,9 +186,9 @@ app.get('/stats/:id',function(req,res){
 });
 
 app.get('/stats/:id/time',function(req,res){
-	conn.query('SELECT count(*) AS `count` FROM (SELECT DISTINCT `poll_id`, `question_id` FROM `answers`) AS q WHERE q.`poll_id` = ? GROUP BY q.`poll_id`',[req.params.id],function(err,data){
+	sql.conn.query('SELECT count(*) AS `count` FROM (SELECT DISTINCT `poll_id`, `question_id` FROM `answers`) AS q WHERE q.`poll_id` = ? GROUP BY q.`poll_id`',[req.params.id],function(err,data){
 		var q_count = typeof data[0] == "undefined" ? 1 : data[0].count;
-		conn.query('SELECT COUNT(*) AS `count`, `date` FROM `answers` WHERE `poll_id` = ? GROUP BY `date` ORDER BY `date` ASC',[req.params.id],function(err,data){
+		sql.conn.query('SELECT COUNT(*) AS `count`, `date` FROM `answers` WHERE `poll_id` = ? GROUP BY `date` ORDER BY `date` ASC',[req.params.id],function(err,data){
 			var intital_date = null;
 			var _return = [];
 			var _return_i = 0;
@@ -202,8 +210,8 @@ app.get('/stats/:id/time',function(req,res){
 });
 
 app.get('/stats/question/:id',function(req,res){
-	conn.query('SELECT `type` FROM `questions` WHERE `id` = ?',[req.params.id],function(err,type){
-		conn.query('SELECT COUNT(*) AS `count`, `value` FROM `answers` WHERE `question_id` = ? GROUP BY `value` ORDER BY `value` ASC',[req.params.id],function(err,data){
+	sql.conn.query('SELECT `type` FROM `questions` WHERE `id` = ?',[req.params.id],function(err,type){
+		sql.conn.query('SELECT COUNT(*) AS `count`, `value` FROM `answers` WHERE `question_id` = ? GROUP BY `value` ORDER BY `value` ASC',[req.params.id],function(err,data){
 			switch(type[0].type){
 				case 'mc':
 				//MC questions, send the data to the client
@@ -216,7 +224,7 @@ app.get('/stats/question/:id',function(req,res){
 				
 				case 'mmc':
 				//Multiple answers, show a table listing all choices
-				conn.query('SELECT COUNT(*) AS `count`, `value` FROM `answers` WHERE `question_id` = ? GROUP BY `value` ORDER BY `value` ASC',[req.params.id],function(err,data){
+				sql.conn.query('SELECT COUNT(*) AS `count`, `value` FROM `answers` WHERE `question_id` = ? GROUP BY `value` ORDER BY `value` ASC',[req.params.id],function(err,data){
 					res.json({
 						html:view.page('ques_dialog',{
 							data:data,
@@ -227,7 +235,7 @@ app.get('/stats/question/:id',function(req,res){
 				break;
 				
 				case 'fillin':
-				conn.query('SELECT `value` FROM `answers` WHERE `question_id` = ? LIMIT 0,30',[req.params.id],function(err,data){
+				sql.conn.query('SELECT `value` FROM `answers` WHERE `question_id` = ? LIMIT 0,30',[req.params.id],function(err,data){
 					res.json({
 						html:view.page('ques_dialog',{
 							data:data,
@@ -247,12 +255,12 @@ app.get('/stats/question/:id',function(req,res){
 });
 
 app.get('/stats/question/:id/search',function(req,res){
-	conn.query('SELECT `type` FROM `questions` WHERE `id` = ?',[req.params.id],function(err,type){
+	sql.conn.query('SELECT `type` FROM `questions` WHERE `id` = ?',[req.params.id],function(err,type){
 		if(!type[0] || type[0].type !== 'fillin'){
 			res.json({success:false});
 			return;
 		}
-		conn.query('SELECT * FROM `answers` WHERE `question_id` = ? AND `value` LIKE \'%'+db.escape(req.query.q).replace(/^'|'$/g,'')+'%\'',[req.params.id],function(err,data){
+		sql.conn.query('SELECT * FROM `answers` WHERE `question_id` = ? AND `value` LIKE \'%'+db.escape(req.query.q).replace(/^'|'$/g,'')+'%\'',[req.params.id],function(err,data){
 			if(err){
 				console.log(err);
 			}
@@ -263,6 +271,6 @@ app.get('/stats/question/:id/search',function(req,res){
 	});
 });
 
-http.listen(process.env.OPENSHIFT_INTERNAL_PORT||8000,process.env.OPENSHIFT_INTERNAL_IP||'127.0.0.1');
+http.listen(process.env.OPENSHIFT_INTERNAL_PORT||(process.env.VMC_APP_PORT||8000),process.env.OPENSHIFT_INTERNAL_IP||'127.0.0.1');
 //https.listen(443);
-console.log('Server listening at port %s',process.env.PORT||8000);
+console.log('Server listening at port %s',process.env.OPENSHIFT_INTERNAL_PORT||8000);

@@ -73,10 +73,15 @@
 				if(step_1_completed){
 					$('#question_form').ajaxSubmit({
 						dataType:'json',
+						beforeSend:function(){
+							$('#ques_dialog .modal-body div:first').slideUp(500);
+							$('#ques_dialog .modal-body div:last').slideDown(500);
+						},
 						success:function(response){
 							if(response.success){
 								step_2_completed = true;
 								$('html,body').animate({scrollTop:0},500);
+								$('#ques_dialog').modal('hide');
 							}
 							else {
 								$('#status .alert .message').text(response.message);
@@ -163,33 +168,36 @@
 					<h3>Set the questions</h3>
 				</div>
 				<div class="modal-body">
-					<button id="add" class="btn pull-right">Add questions</button>
-					<form action="/create/save/questions" method="POST" id="question_form">
-						<div id="question_sets">
-							<div class="question well">
-								<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
-								<label>Title 
-									<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
-								</label>
-								<label>Type of the question 
-									<select name="questions[type]" title="Type of question">
-										<option value="fillin">Fill in the blanks</option>
-										<option value="mc">Multiple Choices</option>
-										<option value="mmc">Multiple Answers</option>
-									</select>
-								</label>
-								<label>Choices (Only for Multiple Choices and Multiple Answers) 
-									<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
-								</label>
+					<div>
+						<button id="add" class="btn pull-right">Add questions</button>
+						<form action="/create/save/questions" method="POST" id="question_form">
+							<div id="question_sets">
+								<div class="question well">
+									<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
+									<label>Title 
+										<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
+									</label>
+									<label>Type of the question 
+										<select name="questions[type]" title="Type of question">
+											<option value="fillin">Fill in the blanks</option>
+											<option value="mc">Multiple Choices</option>
+											<option value="mmc">Multiple Answers</option>
+										</select>
+									</label>
+									<label>Choices (Only for Multiple Choices and Multiple Answers) 
+										<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
+									</label>
 									<label>Required 
-									<input type="checkbox" name="questions[required]" checked/>
-								</label>
+										<input type="checkbox" name="questions[required]" value="1"/>
+									</label>
+								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
+					<div>Please wait...</div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" id="proceed_2" class="btn" data-dismiss="modal">Proceed</a>
+					<a href="#" id="proceed_2" class="btn">Proceed</a>
 				</div>
 			</div>
 		</div>
