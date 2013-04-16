@@ -4,6 +4,7 @@
 		<title>Statistics for <%= meta.name %></title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
 		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<style type="text/css">
@@ -27,7 +28,7 @@
 			text-align: center;
 		}
 		.jumbotron h1 {
-			font-size: 72px;
+			font-size: 60px;
 			line-height: 1;
 		}
 		.jumbotron .btn {
@@ -58,39 +59,44 @@
 		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
 		<script>
 		$(function(){
-			$.ajax({
-				url:'./<%= id %>/time',
-				dataType:'json',
-				cache:false,
-				success:function(data){
-					if(data.length <= 1){
-						$('#tips-overview').show(500);
-					}
-					Flotr.draw($('#date')[0],[{data:data,label:'Poll submitted'}],{
-						title:'People answered per day',
-						xaxis:{
-							mode:'time',
-							title:'Time'
-						},
-						yaxis:{
-							min:0
-						},
-						mouse:{
-							track:true,
-							relative:true,
-							trackFormatter:function(o){
-								return o.y+' Persons';
-							}
-						},
-						points:{
-							show:true
-						},
-						lines:{
-							show:true
+			var update = function(){
+				$.ajax({
+					url:'./<%= id %>/time',
+					dataType:'json',
+					cache:false,
+					success:function(data){
+						if(data.length <= 1){
+							$('#tips-overview').show(500);
 						}
-					});
-				}
-			});
+						Flotr.draw($('#date')[0],[{data:data,label:'Poll submitted'}],{
+							title:'People answered per day',
+							xaxis:{
+								mode:'time',
+								title:'Time'
+							},
+							yaxis:{
+								min:0
+							},
+							mouse:{
+								track:true,
+								relative:true,
+								trackFormatter:function(o){
+									return o.y+' Persons';
+								}
+							},
+							points:{
+								show:true
+							},
+							lines:{
+								show:true
+							}
+						});
+					}
+				});
+				setTimeout(update,5000);
+			};
+			update();
+			
 			$('tr[data-id]').click(function(){
 				var id = $(this).attr('data-id');
 				$.ajax({
@@ -133,7 +139,7 @@
 						}
 					}
 				});
-			});
+			});	
 		});
 		</script>
 	</head>
@@ -143,10 +149,17 @@
 				<ul class="nav nav-pills pull-right">
 					<li><a href="/">Home</a></li>
 					<li><a href="/about">About</a></li>
-					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
+					<li class="dropdown">
+						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
+						<ul class="dropdown-menu">
+							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
+							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
+							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
+						</ul>
+					</li>
 				</ul>
-			<h3 class="muted">PollEndpoint</h3>
-		</div>
+				<h3 class="muted">PollEndpoint</h3>
+			</div>
 		<hr>
 		<div class="jumbotron">
 			<h1>Statistics for <%= meta.name %></h1>
@@ -218,6 +231,13 @@
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
+		<div id="google_translate_element"></div>
+		<script type="text/javascript">
+		function googleTranslateElementInit(){
+			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
+		}
+		</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 		<script type="text/javascript">
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-39218046-1']);

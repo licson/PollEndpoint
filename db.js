@@ -78,6 +78,7 @@ var db = function(){
 		self.conn.query('CREATE TABLE IF NOT EXISTS `answers` (`question_id` varchar(40) NOT NULL,`poll_id` varchar(25) NOT NULL,`id` varchar(40) NOT NULL,`value` text NOT NULL,`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY (`id`),KEY `poll_id` (`poll_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
 		self.conn.query('CREATE TABLE IF NOT EXISTS `polls` ( `id` varchar(25) NOT NULL, `name` varchar(100) NOT NULL, `desc` text, `keywords` varchar(200) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
 		self.conn.query('CREATE TABLE IF NOT EXISTS `questions` ( `id` varchar(40) NOT NULL, `belongs` varchar(25) NOT NULL, `type` varchar(20) NOT NULL, `name` text NOT NULL, `choices` text, `required` tinyint(1) NOT NULL DEFAULT \'1\', PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
+		self.conn.query('CREATE TABLE IF NOT EXISTS `stats` (`poll_id` varchar(25) NOT NULL,`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,KEY `poll_id` (`poll_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
 	});
 	handleDisconnect(this.conn);
 	
@@ -87,7 +88,7 @@ var db = function(){
 			console.log('Reconnecting...');
 			self.conn = reconnect(self.conn);
 		});
-	},900000);
+	},30*60*1000);
 };
 
 module.exports = {driver:db,escape:mysql.escape};

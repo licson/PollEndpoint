@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= meta[0].name %> - PollEndpoint</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="<%= meta[0].keywords %>" />
+		<meta name="description" content="<%= meta[0].desc %>">
+		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<style type="text/css">
+			.question {
+				width: 100%;
+				height: 100%;
+				padding: 5%;
+				box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+			}
+		</style>
+		<script type="text/javascript" src="../assets/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
+		<script type="text/javascript" src="../assets/js/jquery.validate.min.js"></script>
+		<script>
+		$(function(){
+			$('.question').height($('div:first').height());
+			$(window).on('resize',function(){
+				$('.question').height($('div:first').height());
+			})
+			
+			$('#answer').validate({
+				submitHandler:function(form){
+					$('#answer').ajaxSubmit({
+						dataType:'json',
+						success:function(data){
+							if(data.success){
+								$('#dialog').modal();
+							}
+						}
+					});
+				}
+			});
+			$('#widget').carousel().carousel('pause');
+		});
+		</script>
+	</head>
+	
+	<body>
+		<div style="position: fixed; width: 100%; height: 100%; overflow: auto;">
+			<form action="../question/<%= id %>/submit" method="post" id="answer">
+				<div id="widget" class="carousel slide">
+					<div class="carousel-inner">
+						<% for(var i = 0; i < questions.length; i++){
+							var q = questions[i];
+						%>
+						<div class="question item <%= i == 0 ? 'active' : '' %>">
+							<p class="lead"><span><%= i+1 %>.</span> <%= q.name %></p>
+							<% 
+								switch(q.type){
+								case "fillin":
+							%>
+							<input type="text" name="<%= q.id %>" placeholder="Type here..." class="<%= q.required ? 'required' : '' %>"/>
+							<% 	break;
+							
+								case "mc":
+								var choices = q.choices.split(',');
+								
+								for(var j = 0; j < choices.length; j++){
+									var choice = choices[j];
+							%>
+							<label for="<%= q.id+'_'+j %>" class="radio inline">
+								<input type="radio" name="<%= q.id %>" id="<%= q.id+'_'+j %>" value="<%= choice %>" class="<%= q.required ? 'required' : '' %>"/> <%= choice %>
+							</label>
+							<%
+								}
+								break;
+								
+								case "mmc":
+								var choices = q.choices.split(',');
+								
+								for(var j = 0; j < choices.length; j++){
+									var choice = choices[j];
+								%>
+								<label for="<%= q.id+'_'+j %>" class="checkbox inline">
+									<input type="checkbox" name="<%= q.id %>[]" id="<%= q.id+'_'+j %>" value="<%= choice %>" class="<%= q.required ? 'required' : '' %>"/> <%= choice %>
+								</label>
+								<%
+									}
+									break;
+								}
+								
+								if(i === questions.length - 1) {
+								%>
+									<br />
+									<input type="submit" class="btn btn-block" value="Submit" />
+								<%
+								}
+								%>
+						</div>
+						<% } %>
+					</div>
+					<a class="carousel-control left" href="#widget" data-slide="prev">&lsaquo;</a>
+					<a class="carousel-control right" href="#widget" data-slide="next">&rsaquo;</a>
+				</div>
+			</form>
+		</div>
+		<div class="modal hide fade" id="dialog">
+			<div class="modal-header">
+				<h3>Thanks</h3>
+			</div>
+			<div class="modal-body">
+				<p>Thanks for filling this poll.</p>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</body>
+</html>

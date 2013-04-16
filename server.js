@@ -30,16 +30,30 @@ app.use(function(req,res,next){
 	console.log('Request page %s from %s',req.url,req.connection.remoteAddress);
 	next();
 });
+//static files and assets
 app.use('/assets',express.static(__dirname+'/assets/'));
+//help parsing form data
 app.use(express.bodyParser());
 
+//our index page
 app.get('/',function(req,res){
-	sql.conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC',function(err,data){
+	sql.conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC',function(err,latest){
 		if(err){
 			res.send(view.error(err));
 		}
 		else {
-			res.send(view.page('index',{polls:data}));
+			sql.conn.query('SELECT p.`id`, p.`name` FROM `polls` AS p LEFT JOIN (SELECT COUNT(*) AS `count`, `poll_id`, `time` FROM `stats` GROUP BY `poll_id`) AS s ON p.`id` = s.`poll_id` ORDER BY s.`count` DESC LIMIT 0, 10',function(err,popular){
+				if(err){
+				}
+				else {
+				res.send(view.page('index',{
+					polls:{
+						latest:latest,
+						popular:popular
+					}
+				}));
+				}
+			});
 		}
 	});
 });
@@ -53,23 +67,53 @@ app.get('/about',function(req,res){
 });
 
 app.get('/question/:id',function(req,res){
-	var meta;
 	sql.conn.query('SELECT * FROM `polls` WHERE `id` = ?',[req.params.id],function(err,info){
 		if(err){
 			res.send(view.error(err));
 		}
 		else {
-			meta = info;
-			sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,data){
+			sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `time` ASC',[req.params.id],function(err,data){
 				if(err){
 					res.send(view.error(err));
 				}
 				else {
-					res.send(view.page('question',{
-						id:req.params.id,
-						meta:meta,
-						questions:data
-					}));
+					if(data.length > 0){
+						res.send(view.page('question',{
+							id:req.params.id,
+							meta:info,
+							questions:data
+						}));
+					}
+					else {
+						res.send(view.error(new Error('The poll specified does not exists anymore.')));
+					}
+				}
+			});
+		}
+	});
+});
+
+app.get('/widget/:id',function(req,res){
+	sql.conn.query('SELECT * FROM `polls` WHERE `id` = ?',[req.params.id],function(err,info){
+		if(err){
+			res.send(view.error(err));
+		}
+		else {
+			sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `time` ASC',[req.params.id],function(err,data){
+				if(err){
+					res.send(view.error(err));
+				}
+				else {
+					if(data.length > 0){
+						res.send(view.page('widget',{
+							id:req.params.id,
+							meta:info,
+							questions:data
+						}));
+					}
+					else {
+						res.send(view.error(new Error('The poll specified does not exists anymore.')));
+					}
 				}
 			});
 		}
@@ -91,12 +135,16 @@ app.post('/question/:id/submit',function(req,res){
 			}
 		});
 	}
-	
+	sql.conn.query('INSERT INTO `stats` SET ?',{poll_id:req.params.id},function(e){
+		if(e){
+			success = false;
+		}
+	});
 	res.json({success:success});
 });
 
 app.get('/create',function(req,res){
-	res.end(view.page('create',{}));
+	res.send(view.page('create',{}));
 });
 
 app.post('/create/save/basic_info',function(req,res){
@@ -120,14 +168,18 @@ app.post('/create/save/basic_info',function(req,res){
 
 app.post('/create/save/questions',function(req,res){
 	var success = true;
+	var date = new Date();
+	date.setSeconds(0);
 	for(var i = 0; i < req.body.questions.belongs.length; i++){
+		date.setSeconds(i);
 		var q = {
 			belongs:req.body.questions.belongs[i],
 			name:req.body.questions.name[i],
 			type:req.body.questions.type[i],
 			choices:req.body.questions.choices[i],
 			required:req.body.questions.required[i],
-			id:genID(40)
+			id:genID(40),
+			time:date
 		};
 		sql.conn.query('INSERT INTO `questions` SET ?',q,function(err){
 			if(err){
@@ -144,12 +196,12 @@ app.post('/create/save/questions',function(req,res){
 
 app.get('/stats/:id',function(req,res){
 	var id = req.params.id;
-	sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `name` ASC',[req.params.id],function(err,questions){
+	sql.conn.query('SELECT * FROM `questions` WHERE `belongs` = ? ORDER BY `time` ASC',[req.params.id],function(err,questions){
 		if(err){
 			res.send(view.error(err));
 		}
 		else {
-			sql.conn.query('SELECT count(*) AS `count` FROM `answers` WHERE `poll_id` = ?',[id],function(err,data){
+			sql.conn.query('SELECT count(*) AS `count` FROM `stats` WHERE `poll_id` = ?',[id],function(err,data){
 				if(err){
 					res.send(view.error(err));
 				}
@@ -166,15 +218,20 @@ app.get('/stats/:id',function(req,res){
 									res.send(view.error(err));
 								}
 								else {
-									res.send(view.page('stats',{
-										count:{
-											users:t_count/q_count,
-											total:t_count
-										},
-										meta:meta[0],
-										id:id,
-										questions:questions
-									}));
+									if(meta.length > 0){
+										res.send(view.page('stats',{
+											count:{
+												users:t_count,
+												total:t_count*q_count
+											},
+											meta:meta[0],
+											id:id,
+											questions:questions
+										}));
+									}
+									else {
+										res.send(view.error(new Error('The poll specified does not exist anymore.')));
+									}
 								}
 							});
 						}
@@ -186,26 +243,23 @@ app.get('/stats/:id',function(req,res){
 });
 
 app.get('/stats/:id/time',function(req,res){
-	sql.conn.query('SELECT count(*) AS `count` FROM (SELECT DISTINCT `poll_id`, `question_id` FROM `answers`) AS q WHERE q.`poll_id` = ? GROUP BY q.`poll_id`',[req.params.id],function(err,data){
-		var q_count = typeof data[0] == "undefined" ? 1 : data[0].count;
-		sql.conn.query('SELECT COUNT(*) AS `count`, `date` FROM `answers` WHERE `poll_id` = ? GROUP BY `date` ORDER BY `date` ASC',[req.params.id],function(err,data){
-			var intital_date = null;
-			var _return = [];
-			var _return_i = 0;
-			for(var i = 0; i < data.length; i++){
-				data[i].date.setHours(0);
-				data[i].date.setSeconds(0);
-				if(intital_date == null || (data[i].date.getFullYear() !== intital_date.getFullYear() || data[i].date.getMonth() !== intital_date.getMonth() || data[i].date.getDate() !== intital_date.getDate())){
-					_return.push([data[i].date.getTime(),data[i].count/q_count]);
-					_return_i = _return.length == 1 ? 0 : _return_i+1;
-				}
-				else {
-					_return[_return_i][1] += (data[i].count/q_count);
-				}
-				intital_date = data[i].date;
+	sql.conn.query('SELECT COUNT(*) AS `count`, `time` FROM `stats` WHERE `poll_id` = ? GROUP BY `time` ORDER BY `time` ASC',[req.params.id],function(err,data){
+		var intital_date = null;
+		var _return = [];
+		var _return_i = 0;
+		for(var i = 0; i < data.length; i++){
+			data[i].time.setHours(0);
+			data[i].time.setSeconds(0);
+			if(intital_date == null || (data[i].time.getFullYear() !== intital_date.getFullYear() || data[i].time.getMonth() !== intital_date.getMonth() || data[i].time.getDate() !== intital_date.getDate())){
+				_return.push([data[i].time.getTime(),data[i].count]);
+				_return_i = _return.length == 1 ? 0 : _return_i+1;
 			}
-			res.json(_return);
-		});
+			else {
+				_return[_return_i][1] += (data[i].count);
+			}
+			intital_date = data[i].time;
+		}
+		res.json(_return);
 	});
 });
 
@@ -217,20 +271,37 @@ app.get('/stats/question/:id',function(req,res){
 				//MC questions, send the data to the client
 				var _data = [];
 				for(var i = 0; i < data.length; i++){
-					_data.push({data:[[0,data[i].count]],label:data[i].value});
+					_data.push({
+						data:[
+							[0,data[i].count]
+						],
+						label:data[i].value
+					});
 				}
 				res.json(_data);
 				break;
 				
 				case 'mmc':
-				//Multiple answers, show a table listing all choices
+				//Multiple answers, show a multiple answers chart
+				var _data = {}, _final = [];
 				sql.conn.query('SELECT COUNT(*) AS `count`, `value` FROM `answers` WHERE `question_id` = ? GROUP BY `value` ORDER BY `value` ASC',[req.params.id],function(err,data){
-					res.json({
-						html:view.page('ques_dialog',{
-							data:data,
-							type:type[0].type
-						})
-					});
+					for(var i = 0; i < data.length; i++){
+						var choices = data.value.split(',');
+						for(var j = 0; j < choices.length; j++){
+							_data[choices[j]] ? _data[choices[j]] += data.value : _data[choices[j]] = data.value;
+						}
+					}
+					
+					for(var i in _data){
+						_final.push({
+							data:[
+								[0,_data[i]]
+							],
+							label:i
+						});
+					}
+					
+					res.json(_final);
 				});
 				break;
 				

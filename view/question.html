@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="<%= meta[0].keywords %>" />
 		<meta name="description" content="<%= meta[0].desc %>">
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f"></meta>
 		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<style type="text/css">
@@ -31,7 +32,7 @@
 			box-shadow: 0px 0px 3em #ccc inset, 0px 0px 20px 5px #ccc;
 		}
 		.jumbotron h1 {
-			font-size: 72px;
+			font-size: 60px;
 			line-height: 1;
 		}
 		.jumbotron .btn {
@@ -76,6 +77,11 @@
 					});
 				}
 			});
+			
+			if(window.location.search.indexOf('?created=1') > -1){
+				$('#created_dialog').modal();
+				$('#created_dialog .modal-body a.btn').attr('href','https://facebook.com/sharer/sharer.php?u='+window.location.href+'&t=Please%20%20do%20this%20poll%20for%20me.%20via%20@PollEndpoint');
+			}
 		});
 		</script>
 	</head>
@@ -85,10 +91,17 @@
 				<ul class="nav nav-pills pull-right">
 					<li><a href="/">Home</a></li>
 					<li><a href="/about">About</a></li>
-					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
+					<li class="dropdown">
+						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
+						<ul class="dropdown-menu">
+							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
+							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
+							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
+						</ul>
+					</li>
 				</ul>
-			<h3 class="muted">PollEndpoint</h3>
-		</div>
+				<h3 class="muted">PollEndpoint</h3>
+			</div>
 		<hr>
 		<div class="jumbotron" itemscope itemtype="http://schema.org/WPHeader">
 			<h1 itemprop="name"><%= meta[0].name %></h1>
@@ -148,6 +161,35 @@
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
+		<div class="modal hide fade" id="created_dialog">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>The poll was created!</h3>
+			</div>
+			<div class="modal-body">
+				<p class="lead">Yon can do the followings</p>
+				<p>Share through social networks</p>
+
+				<a class="btn btn-primary btn-block" href="#">Share to Facebook</a>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= meta[0].name + ' - ' + meta[0].desc.replace(/\n|\r|\r\n/g,"") %>" data-via="LicsonLee" data-size="large">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+				<p class="lead">or</p>
+				<p>Embed it to your blog / website</p>
+				<p>Copy the embed code below</p>
+				<textarea style="width: 100%;">&lt;iframe src=&quot;https://pollendpoint-licson.rhcloud.com/widget/<%= id %>&quot; width=&quot;100%&quot; height=&quot;400&quot; allowtransparency&gt;&lt;/iframe&gt;</textarea>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Close</a>
+			</div>
+		</div>
+		<div id="google_translate_element"></div>
+		<script type="text/javascript">
+		function googleTranslateElementInit(){
+			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
+		}
+		</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 		<script type="text/javascript">
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-39218046-1']);

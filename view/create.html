@@ -4,8 +4,10 @@
 		<title>PollEndpoint</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f"></meta>
 		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/jquery.tagsinput.css" rel="stylesheet">
 		<style type="text/css">
 		body {
 			padding-top: 20px;
@@ -27,7 +29,7 @@
 			text-align: center;
 		}
 		.jumbotron h1 {
-			font-size: 72px;
+			font-size: 60px;
 			line-height: 1;
 		}
 		.jumbotron .btn {
@@ -46,10 +48,13 @@
 		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.tagsinput.min.js"></script>
 		<script>
 		$(function(){
 			var id;
 			var step_1_completed = false, step_2_completed = false;
+			$('#question_form').validate();
 			$('input,select[title]').tooltip();
 			$('#status .alert .close').click(function(){
 				$('#status .alert').hide(500);
@@ -71,28 +76,37 @@
 			});
 			$('#proceed_2').click(function(){
 				if(step_1_completed){
-					$('#question_form').ajaxSubmit({
-						dataType:'json',
-						beforeSend:function(){
-							$('#ques_dialog .modal-body div:first').slideUp(500);
-							$('#ques_dialog .modal-body div:last').slideDown(500);
-						},
-						success:function(response){
-							if(response.success){
-								step_2_completed = true;
-								$('html,body').animate({scrollTop:0},500);
-								$('#ques_dialog').modal('hide');
+					if($('#question_form').valid()){
+						$('#question_form').ajaxSubmit({
+							dataType:'json',
+							beforeSend:function(){
+								$('#ques_dialog .modal-body div:first').slideUp(500);
+								$('#ques_dialog .modal-body div:last').slideDown(500);
+							},
+							success:function(response){
+								if(response.success){
+									step_2_completed = true;
+									$('html,body').animate({scrollTop:0},500);
+									$('#ques_dialog').modal('hide');
+								}
+								else {
+									$('#status .alert .message').text(response.message);
+									$('#status .alert').show(500);
+									$('#ques_dialog').modal('hide');
+								}
 							}
-							else {
-								$('#status .alert .message').text(response.message);
-								$('#status .alert').show(500);
-							}
-						}
-					});
+						});
+					}
+					else {
+						$('#status .alert .message').text('Please set the questions properly.');
+						$('#status .alert').show(500);
+						$('#ques_dialog').modal('hide');
+					}
 				}
 				else {
 					$('#status .alert .message').text('Please complete step 1 first.');
 					$('#status .alert').show(500);
+					$('#ques_dialog').modal('hide');
 				}
 			});
 			$('#send').click(function(e){
@@ -105,14 +119,17 @@
 				}
 			});
 			$('#add').click(function(){
-				$('.question:last').clone().appendTo('#question_sets');
+				$('.question:last').clone().appendTo('#question_sets').find('.tagsinput').remove();
+				$('.tags:last').tagsInput();
 				$('.p_id').val(id);
+				$('#question_form').validate();
 			});
 			$(window).on('beforeunload',function(e){
 				if(!window.confirm('Are you sure you want to leave?')){
 					e.preventDefault();
 				}
 			});
+			$('.tags:first,#basic_info input[name=keywords]').tagsInput();
 		});
 		</script>
 	</head>
@@ -122,10 +139,17 @@
 				<ul class="nav nav-pills pull-right">
 					<li><a href="/">Home</a></li>
 					<li><a href="/about">About</a></li>
-					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
+					<li class="dropdown">
+						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
+						<ul class="dropdown-menu">
+							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
+							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
+							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
+						</ul>
+					</li>
 				</ul>
-			<h3 class="muted">PollEndpoint</h3>
-		</div>
+				<h3 class="muted">PollEndpoint</h3>
+			</div>
 		<hr>
 		<div class="jumbotron">
 			<h1>Create a Poll</h1>
@@ -173,28 +197,28 @@
 						<form action="/create/save/questions" method="POST" id="question_form">
 							<div id="question_sets">
 								<div class="question well">
-									<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
+									<input type="hidden" value="" name="questions[belongs]" class="p_id required"/>
 									<label>Title 
-										<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
+										<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question" class="required" />
 									</label>
 									<label>Type of the question 
-										<select name="questions[type]" title="Type of question">
+										<select name="questions[type]" title="Type of question" class="required">
 											<option value="fillin">Fill in the blanks</option>
 											<option value="mc">Multiple Choices</option>
 											<option value="mmc">Multiple Answers</option>
 										</select>
 									</label>
 									<label>Choices (Only for Multiple Choices and Multiple Answers) 
-										<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
+										<input type="text" name="questions[choices]" placeholder="Choices" title="Type in each choice and press enter to enter another choice." class="tags" />
 									</label>
 									<label>Required 
-										<input type="checkbox" name="questions[required]" value="1"/>
+										<input type="checkbox" name="questions[required]" value="1" checked class="required"/>
 									</label>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div>Please wait...</div>
+					<div style="display:none;">Please wait...</div>
 				</div>
 				<div class="modal-footer">
 					<a href="#" id="proceed_2" class="btn">Proceed</a>
@@ -205,6 +229,13 @@
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
+		<div id="google_translate_element"></div>
+		<script type="text/javascript">
+		function googleTranslateElementInit(){
+			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
+		}
+		</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 		<script type="text/javascript">
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-39218046-1']);
