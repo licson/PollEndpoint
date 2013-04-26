@@ -15,6 +15,6 @@ module.exports = {
 		return ejs.render(fs.readFileSync(__dirname + '/view/' + name + '.html','utf-8'),opts);
 	},
 	error:function(err){
-		return ejs.render(fs.readFileSync(__dirname + '/view/error','utf-8'),{err:err});
+		return ejs.render(fs.readFileSync(__dirname + '/view/error.html','utf-8'),{err:err});
 	}
 }

@@ -3,12 +3,7 @@
 	<head>
 		<title>Statistics for <%= meta.name %></title>
 		<meta charset="utf-8">
-		<meta name="Keywords" content="free,open-source,online questionnaire,online polls,platform,pollendpoint,high performance,easy to use, node.js,system,mobile compatible,responsive design,clean" />
-		<meta name="description" content="PollEndpoint is a free, open-source questionnaire platform created by Licson Lee that is easy to use and fast. It's also compatible with mobile browsers that makes your questionnaires available in more platforms." />
-		<meta name="author" content="Licson Lee" />
-		<meta name="application-name" content="PollEndpoint" />	
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
 		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<style type="text/css">
@@ -32,7 +27,7 @@
 			text-align: center;
 		}
 		.jumbotron h1 {
-			font-size: 60px;
+			font-size: 72px;
 			line-height: 1;
 		}
 		.jumbotron .btn {
@@ -57,50 +52,45 @@
 			width: 88%;
 		}
 		</style>
-		<script type="text/javascript" src="../assets/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../assets/js/flotr2.min.js"></script>
 		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
 		<script>
 		$(function(){
-			var update = function(){
-				$.ajax({
-					url:'./<%= id %>/time',
-					dataType:'json',
-					cache:false,
-					success:function(data){
-						if(data.length <= 1){
-							$('#tips-overview').show(500);
-						}
-						Flotr.draw($('#date')[0],[{data:data,label:'Poll submitted'}],{
-							title:'People answered per day',
-							xaxis:{
-								mode:'time',
-								title:'Time'
-							},
-							yaxis:{
-								min:0
-							},
-							mouse:{
-								track:true,
-								relative:true,
-								trackFormatter:function(o){
-									return o.y+' Persons';
-								}
-							},
-							points:{
-								show:true
-							},
-							lines:{
-								show:true
-							}
-						});
+			$.ajax({
+				url:'./<%= id %>/time',
+				dataType:'json',
+				cache:false,
+				success:function(data){
+					if(data.length <= 1){
+						$('#tips-overview').show(500);
 					}
-				});
-				setTimeout(update,5000);
-			};
-			update();
-			
+					Flotr.draw($('#date')[0],[{data:data,label:'Poll submitted'}],{
+						title:'People answered per day',
+						xaxis:{
+							mode:'time',
+							title:'Time'
+						},
+						yaxis:{
+							min:0
+						},
+						mouse:{
+							track:true,
+							relative:true,
+							trackFormatter:function(o){
+								return o.y+' Persons';
+							}
+						},
+						points:{
+							show:true
+						},
+						lines:{
+							show:true
+						}
+					});
+				}
+			});
 			$('tr[data-id]').click(function(){
 				var id = $(this).attr('data-id');
 				$.ajax({
@@ -118,7 +108,7 @@
 							$('#ques_dialog .modal-body :not(.chart)').remove();
 							$('#ques_dialog .chart').show();
 							$('#ques_dialog').modal('show');
-							$('#ques_dialog').on('shown',function(){
+							setTimeout(function(){
 								Flotr.draw($('#ques_dialog .chart')[0],data,{
 									title:'Choices answered',
 									xaxis:{
@@ -139,11 +129,11 @@
 										}
 									}
 								});
-							});
+							},300);
 						}
 					}
 				});
-			});	
+			});
 		});
 		</script>
 	</head>
@@ -153,17 +143,10 @@
 				<ul class="nav nav-pills pull-right">
 					<li><a href="/">Home</a></li>
 					<li><a href="/about">About</a></li>
-					<li class="dropdown">
-						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
-						<ul class="dropdown-menu">
-							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
-							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
-							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
-						</ul>
-					</li>
+					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
 				</ul>
-				<h3 class="muted">PollEndpoint</h3>
-			</div>
+			<h3 class="muted">PollEndpoint</h3>
+		</div>
 		<hr>
 		<div class="jumbotron">
 			<h1>Statistics for <%= meta.name %></h1>
@@ -235,23 +218,5 @@
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>
-		<div id="google_translate_element"></div>
-		<script type="text/javascript">
-		function googleTranslateElementInit(){
-			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
-		}
-		</script>
-		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-		<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-39218046-1']);
-		_gaq.push(['_trackPageview']);
-		
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-		</script>
 	</body>
 </html>

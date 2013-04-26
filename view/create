@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+	<head>
+		<title>PollEndpoint</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<style type="text/css">
+		body {
+			padding-top: 20px;
+			padding-bottom: 40px;
+		}
+		
+		/* Custom container */
+		.container-narrow {
+			margin: 0 auto;
+			max-width: 700px;
+		}
+		.container-narrow > hr {
+			margin: 30px 0;
+		}
+		
+		/* Main marketing message and sign up button */
+		.jumbotron {
+			margin: 60px 0;
+			text-align: center;
+		}
+		.jumbotron h1 {
+			font-size: 72px;
+			line-height: 1;
+		}
+		.jumbotron .btn {
+			font-size: 21px;
+			padding: 14px 24px;
+		}
+		
+		/* Supporting marketing content */
+		.marketing {
+			margin: 60px 0;
+		}
+		.marketing p + h4 {
+			margin-top: 28px;
+		}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
+		<script>
+		$(function(){
+			var id;
+			var step_1_completed = false, step_2_completed = false;
+			$('input,select[title]').tooltip();
+			$('#status .alert .close').click(function(){
+				$('#status .alert').hide(500);
+			});
+			$('#basic_info').ajaxForm({
+				dataType:'json',
+				success:function(response){
+					if(response.success){
+						id = response.id;
+						$('.p_id').val(response.id);
+						step_1_completed = true;
+						$('#ques_dialog').modal('show');
+					}
+					else {
+						$('#status .alert .message').text(response.message);
+						$('#status .alert').show(500);
+					}
+				}
+			});
+			$('#proceed_2').click(function(){
+				if(step_1_completed){
+					$('#question_form').ajaxSubmit({
+						dataType:'json',
+						success:function(response){
+							if(response.success){
+								step_2_completed = true;
+								$('html,body').animate({scrollTop:0},500);
+							}
+							else {
+								$('#status .alert .message').text(response.message);
+								$('#status .alert').show(500);
+							}
+						}
+					});
+				}
+				else {
+					$('#status .alert .message').text('Please complete step 1 first.');
+					$('#status .alert').show(500);
+				}
+			});
+			$('#send').click(function(e){
+				if(step_1_completed && step_2_completed){
+					window.location.href = "/question/"+id+'?created=1';
+				}
+				else {
+					$('#status .alert .message').text('Please complete step 1 and 2 first.');
+					$('#status .alert').show(500);
+				}
+			});
+			$('#add').click(function(){
+				$('.question:last').clone().appendTo('#question_sets');
+				$('.p_id').val(id);
+			});
+			$(window).on('beforeunload',function(e){
+				if(!window.confirm('Are you sure you want to leave?')){
+					e.preventDefault();
+				}
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<div class="container-narrow">
+			<div class="masthead">
+				<ul class="nav nav-pills pull-right">
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="mailto:licson0729@gmail.com">Contact</a></li>
+				</ul>
+			<h3 class="muted">PollEndpoint</h3>
+		</div>
+		<hr>
+		<div class="jumbotron">
+			<h1>Create a Poll</h1>
+			<p>Start creating a poll here.</p>
+		</div>
+		<hr>
+		<div id="status">
+			<div class="alert" style="display:none;">
+				<a href="#" class="close">&times;</a>
+				<strong>Warning!</strong> <span class="message"></span>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4" id="step_1">
+				<h4>First Step</h4>
+				<p>Enter the basic information about the questionnaire.</p>
+				<form id="basic_info" action="/create/save/basic_info" method="POST">
+					<input type="text" name="name" placeholder="The name of the poll" />
+					<input type="text" name="keywords" placeholder="Keywords of your poll (For search engines)" />
+					<textarea name="desc" placeholder="Description"></textarea>
+					<input type="submit" id="proceed_1" class="btn" value="Proceed" />
+				</form>
+			</div>
+			<div class="span4">
+				<h4>Step 2</h4>
+				<p>Set the questions of your poll</p>
+				<a href="#ques_dialog" data-toggle="modal" class="btn">Set the questions</a>
+			</div>
+			<div class="span4">
+				<h4>Step 3</h4>
+				<p>Submit your poll</p>
+				<button class="btn" id="send">Submit</button>
+			</div>
+		</div>
+		<hr>
+		<div>
+			<div class="modal hide fade" id="ques_dialog">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3>Set the questions</h3>
+				</div>
+				<div class="modal-body">
+					<button id="add" class="btn pull-right">Add questions</button>
+					<form action="/create/save/questions" method="POST" id="question_form">
+						<div id="question_sets">
+							<div class="question well">
+								<input type="hidden" value="" name="questions[belongs]" class="p_id"/>
+								<label>Title 
+									<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question"/>
+								</label>
+								<label>Type of the question 
+									<select name="questions[type]" title="Type of question">
+										<option value="fillin">Fill in the blanks</option>
+										<option value="mc">Multiple Choices</option>
+										<option value="mmc">Multiple Answers</option>
+									</select>
+								</label>
+								<label>Choices (Only for Multiple Choices and Multiple Answers) 
+									<input type="text" name="questions[choices]" placeholder="Choices (seperate with commas)" title="Seperate your choices with commas."/>
+								</label>
+									<label>Required 
+									<input type="checkbox" name="questions[required]" checked/>
+								</label>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<a href="#" id="proceed_2" class="btn" data-dismiss="modal">Proceed</a>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="footer">
+			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
+		</div>
+	</body>
+</html>

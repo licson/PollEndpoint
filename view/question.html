@@ -3,10 +3,16 @@
 	<head>
 		<title><%= meta[0].name %> - PollEndpoint</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="keywords" content="<%= meta[0].keywords %>" />
-		<meta name="description" content="<%= meta[0].desc %>">
-		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f"></meta>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="keywords" content="<%= meta[0].keywords %>,free online survey,free online questionnaire,pollendpoint,free online poll" />
+		<meta name="description" content="<%= meta[0].desc %> Powered by PollEndpoint." />
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
+		<meta property="og:title" content="<%= meta[0].name %> - PollEndpoint" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://pollendpoint-licson.rhcloud.com/question/<%= id %>" />
+		<meta property="og:image" content="https://pollendpoint-licson.rhcloud.com/assets/img/webimage.png" />
+		<meta property="og:site_name" content="PollEndpoint" />
+		<meta property="fb:admins" content="1098332345" />
 		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<style type="text/css">
@@ -116,8 +122,8 @@
 				for(var i = 0; i < questions.length; i++){
 					var q = questions[i];
 				%>
-				<div class="question" data-id="<%= q.id %>">
-					<p class="lead"><span><%= i+1 %>.</span> <%= q.name %></p>
+				<div class="question" itemscope itemtype="http://schema.org/Enumeration">
+					<p class="lead"><% if(q.required){ %><span class="label label-important">*</span><% } %> <span class="muted"><%= i+1 %>.</span> <span itemprop="name"><%= q.name %></span></p>
 					<% 
 					switch(q.type){
 						case "fillin":
@@ -154,6 +160,7 @@
 					%>
 				</div>
 				<% } %>
+				<p>Question with <span class="label label-important">*</span> is required to finish.</p>
 				<button class="btn btn-large">Submit</button>
 			</form>
 		</div>

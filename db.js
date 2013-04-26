@@ -18,7 +18,7 @@ function handleDisconnect(conn) {
 		}
 		
 		if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
-			throw err;
+			console.log(err);
 		}
 		
 		console.log('Re-connecting lost connection: ' + err.stack);
@@ -30,8 +30,16 @@ function handleDisconnect(conn) {
 
 //Function to do the reconnection
 function reconnect(old){
-	var conn = mysql.createConnection(old.config);
-	conn.connect();
+	var conn = mysql.createConnection({
+		host:process.env.OPENSHIFT_MYSQL_DB_HOST,
+		port:process.env.OPENSHIFT_MYSQL_DB_PORT,
+		user:process.env.OPENSHIFT_MYSQL_DB_USERNAME,
+		password:process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
+		database:'pollendpoint'
+	});
+	conn.connect(function(){
+		console.log('Successfully connected to MySQL database.');
+	});
 	return conn;
 };
 
@@ -46,7 +54,8 @@ var db = function(){
 			port:process.env.OPENSHIFT_MYSQL_DB_PORT,
 			user:process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 			password:process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-			database:'pollendpoint'
+			database:'pollendpoint',
+			multipleStatements:true
 		});
 	}
 	else {
@@ -68,27 +77,16 @@ var db = function(){
 		else {
 			console.log('Successfully connected to MySQL database.');
 		}
-		
-		//Create the tables if not exists
-		var noop = function(e){
-			!e && console.log('Table creation succeed.');
-		};
-		self.conn.query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";',noop);
-		self.conn.query('SET time_zone = "+00:00";',noop);
-		self.conn.query('CREATE TABLE IF NOT EXISTS `answers` (`question_id` varchar(40) NOT NULL,`poll_id` varchar(25) NOT NULL,`id` varchar(40) NOT NULL,`value` text NOT NULL,`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY (`id`),KEY `poll_id` (`poll_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
-		self.conn.query('CREATE TABLE IF NOT EXISTS `polls` ( `id` varchar(25) NOT NULL, `name` varchar(100) NOT NULL, `desc` text, `keywords` varchar(200) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
-		self.conn.query('CREATE TABLE IF NOT EXISTS `questions` ( `id` varchar(40) NOT NULL, `belongs` varchar(25) NOT NULL, `type` varchar(20) NOT NULL, `name` text NOT NULL, `choices` text, `required` tinyint(1) NOT NULL DEFAULT \'1\', PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
-		self.conn.query('CREATE TABLE IF NOT EXISTS `stats` (`poll_id` varchar(25) NOT NULL,`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,KEY `poll_id` (`poll_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;',noop);
 	});
 	handleDisconnect(this.conn);
 	
-	//Reconnect every 15 minutes to wake the server up
+	//Reconnect every 30 minutes to wake the server up
 	setInterval(function(){
 		self.conn.end(function(){
 			console.log('Reconnecting...');
 			self.conn = reconnect(self.conn);
 		});
-	},30*60*1000);
+	},20*60*1000);
 };
 
 module.exports = {driver:db,escape:mysql.escape};
