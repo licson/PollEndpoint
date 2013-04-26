@@ -119,7 +119,15 @@
 				}
 			});
 			$('#add').click(function(){
-				$('.question:last').clone().appendTo('#question_sets').find('.tagsinput').remove();
+				$('.question:last')
+					.clone()
+					.find("input['questions[name]']")
+					.val('')
+					.end()
+					.appendTo('#question_sets')
+					.find('.tagsinput')
+					.remove();
+				
 				$('.tags:last').tagsInput();
 				$('.p_id').val(id);
 				$('#question_form').validate();
