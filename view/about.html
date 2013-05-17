@@ -22,59 +22,29 @@
 		
 		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-		<style type="text/css">
-		body {
-			padding-top: 20px;
-			padding-bottom: 40px;
-		}
+		<link type="text/css" href="assets/css/page.css" rel="stylesheet">
 		
-		/* Custom container */
-		.container-narrow {
-			margin: 0 auto;
-			max-width: 700px;
-		}
-		.container-narrow > hr {
-			margin: 30px 0;
-		}
-		
-		/* Main marketing message and sign up button */
-		.jumbotron {
-			margin: 60px 0;
-			text-align: center;
-		}
-		.jumbotron h1 {
-			font-size: 60px;
-			line-height: 1;
-		}
-		.jumbotron .btn {
-			font-size: 21px;
-			padding: 14px 24px;
-		}
-		
-		/* Supporting marketing content */
-		.marketing {
-			margin: 60px 0;
-		}
-		</style>
 		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="masthead">
-				<ul class="nav nav-pills pull-right">
-					<li><a href="/">Home</a></li>
-					<li><a href="/about">About</a></li>
-					<li class="dropdown">
-						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
-						<ul class="dropdown-menu">
-							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
-							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
-							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
-						</ul>
-					</li>
-				</ul>
-				<h3 class="muted">PollEndpoint</h3>
+			<div class="navbar navbar-static-top">
+				<div class="navbar-inner">
+					<a class="brand" href="/">PollEndpoint</a>
+					<ul class="nav">
+						<li><a href="/">Home</a></li>
+						<li><a href="/about">About</a></li>
+						<li class="dropdown">
+							<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact <i class="carat"></i></a>
+							<ul class="dropdown-menu">
+								<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
+								<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
+								<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 			</div>
 		<hr>
 		<div class="jumbotron">
@@ -82,28 +52,36 @@
 			<p class="lead">About</p>
 		</div>
 		<hr>
-		<div class="marketing" itemscope itemtype="http://schema.org/AboutPage">
-			<div class="hero-unit">
-				<h1 itemprop="headline">It's for you to create questionnaires, surveys and polls in no time.</h1>
-				<p>Also, it's open-source! Go get the code at <a href="https://github.com/licson0729/PollEndpoint">GitHub</a>.</p>
-				<a href="/create" class="btn btn-success" itemprop="significantLink">Try it now!</a>
+		<div itemscope itemtype="http://schema.org/AboutPage">
+			<div class="jumbotron">
+				<h2 itemprop="headline">It's for you to create questionnaires, surveys and polls in no time.</h2>
+				<p>It's created for ease of use so if you have anything to complain please contact us.</p>
 			</div>
 			<div itemprop="mainContentOfPage">
-				<h3>About the creator</h3>
-				<p>Hi! I'm the site's creator, Licson Lee. I've been working on some other projects before but they're not so useful so I'm not talking them at here. If you want to know more about me, you can check out my <a href="http://serve-licson.net23.net/">personal website</a>.</p>
-				<p>I created PollEndpoint originally for my homework assignment because other online survey service doesn't match my requirements. So I made my own site for making online questionnaires and I found it pretty useful for others so I release it.</p>
-				<p>Hope you like it.</p>
-				
-				<h3>Motivation</h3>
-				<p>Before the creation of PollEndpoint, I have done some online surveys and found most of them not easy to use and hardcoded.</p>
-				<p>Therefore, I want to create a survey service that is easy to use and manange. PollEndpoint is the final product that I've made.</p>
-				
-				<h3>Support &amp; Ideas</h3>
-				<p>Currently we have a <a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">facebook page</a> to collect ideas and user support. If you have any problems while using PollEndpoint, feel free to post at the page or email me <a href="mailto:licson0729@gmail.com">(licson0729@gmail.com)</a>.</p>
-				<p>If you found problems with my code or want to suggest new features, you can submit an issue on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a> or you can post it to our facebook page.</p>
-				
-				<h3>PollEndpoint is open-source</h3>
-				<p>I think I forget to tell you something. PollEndpoint is open-source. If you're interested about how I wrote this, you can have a look at the repository on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a></p>
+				<div class="row-fluid">
+					<div class="span6">
+						<h3>About the creator</h3>
+						<p>Hi! I'm the site's creator, Licson Lee. I've been working on some other projects before but they're not so useful so I'm not talking them at here. If you want to know more about me, you can check out my <a href="http://serve-licson.net23.net/">personal website</a>.</p>
+						<p>I created PollEndpoint originally for my homework assignment because other online survey service doesn't match my requirements. So I made my own site for making online questionnaires and I found it pretty useful for others so I release it.</p>
+						<p>Hope you like it.</p>
+					</div>
+					<div class="span6">
+						<h3>Motivation</h3>
+						<p>Before the creation of PollEndpoint, I have done some online surveys and found most of them not easy to use and hardcoded.</p>
+						<p>Therefore, I want to create a survey service that is easy to use and manange. PollEndpoint is the final product that I've made.</p>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6">
+						<h3>Support &amp; Ideas</h3>
+						<p>Currently we have a <a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">facebook page</a> to collect ideas and user support. If you have any problems while using PollEndpoint, feel free to post at the page or email me <a href="mailto:licson0729@gmail.com">(licson0729@gmail.com)</a>.</p>
+						<p>If you found problems with my code or want to suggest new features, you can submit an issue on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a> or you can post it to our facebook page.</p>
+					</div>
+					<div class="span6">
+						<h3>PollEndpoint is open-source</h3>
+						<p>I think I forget to tell you something. PollEndpoint is open-source. If you're interested about how I wrote this, you can have a look at the repository on <a href="https://github.com/licson0729/PollEndpoint">GitHub</a></p>
+					</div>
+				</div>
 			</div>
 		</div>
 		<hr>

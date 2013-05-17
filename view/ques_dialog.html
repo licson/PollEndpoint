@@ -1,6 +1,6 @@
-<% switch(type){case 'mmc':%><table class="table table-striped"><caption>Multiple Answers list</caption><thead><tr><th>#</th><th>Choices</th><th>Count</th></tr></thead><tbody>
-<% for(var i = 0; i < data.length; i++){ %><tr><td><%= i+1 %></td><td><%= data[i].value %></td><td><%= data[i].count %></td></tr>
-<% } %></tbody></table><% break;case 'fillin':%>
+<% switch(type){
+case 'fillin':
+%>
 <script>
 $(function(){
 	$('#fillin-search').ajaxForm({
@@ -18,5 +18,10 @@ $(function(){
 	});
 });
 </script>
-<form method="get" action="./question/<%= id %>/search" id="fillin-search" class="form-search"><input type="text" class="input-medium search-query" name="q"><input type="submit" class="btn" value="Search"/></form><table class="table table-striped"><caption>Fill in answers</caption><thead><tr><th>#</th><th>Answers</th></tr></thead><tbody><% for(var i = 0; i < data.length; i++){ %><tr><td><%= i+1 %></td><td><%= data[i].value %></td></tr><% } %>
-</tbody></table><% break;}%>
+<form method="get" action="./question/<%= id %>/search" id="fillin-search" class="form-search"><input type="text" class="input-medium search-query" name="q"><input type="submit" class="btn" value="Search"/></form>
+<table class="table table-striped"><caption>Fill in answers</caption><thead><tr><th>#</th><th>Answers</th></tr></thead><tbody>
+<% for(var i = 0; i < data.length; i++){ %><tr><td><%= i+1 %></td><td><%= data[i].value %></td></tr><% } %>
+</tbody></table>
+<% break;
+}
+%>

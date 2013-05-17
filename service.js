@@ -124,14 +124,15 @@ app.get('/robots.txt',function(req,res){
 	var lines = [
 		'User-agent: *',
 		'Disallow: /phpmyadmin/',
-		'Sitemap: <https://pollendpoint-licson.rhcloud.com/sitemap>',
-		'Crawl-delay: 3'
+		'Disallow: /haproxy-status',
+		'Sitemap: https://pollendpoint-licson.rhcloud.com/sitemap',
+		'Crawl-delay: 0'
 	].join("\n");
 	res.send(lines);
 });
 
 app.get('/sitemap',function(req,res){
-	sql.conn.query("SELECT `id` FROM `polls` LIMIT 0,50",function(err,data){
+	sql.conn.query("SELECT `id` FROM `polls` LIMIT 0,100",function(err,data){
 		if(!err){
 			var sitemap = [
 				'<?xml version="1.0" encoding="utf-8"?>',
@@ -158,6 +159,33 @@ app.get('/sitemap',function(req,res){
 			].join('');
 			res.writeHead(200,{'Content-type':'text/xml'});
 			res.end(sitemap);
+		}
+	});
+});
+
+app.get('/search',function(req,res){
+	var keywords = req.query.q;
+	var page = parseInt(typeof req.query.page === "undefined" ? 1 : req.query.page);
+	sql.conn.query('SELECT count(*) AS `count` FROM `polls` WHERE `name` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `keywords` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\'',function(err,rows){
+		if(!err){
+			var count = rows[0].count;
+			sql.conn.query('SELECT * FROM `polls` WHERE `name` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `keywords` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' LIMIT '+(page-1)*20+', 20',function(err,result){
+				if(!err){
+					res.send(view.page('search',{
+						keyword: keywords,
+						result: result,
+						page: page,
+						count: count,
+						limit: 20
+					}));
+				}
+				else {
+					res.send(view.error(err));
+				}
+			});
+		}
+		else {
+			res.send(view.error(err));
 		}
 	});
 });

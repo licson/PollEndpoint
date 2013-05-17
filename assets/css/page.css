@@ -1,0 +1,70 @@
+body {
+	padding-top: 20px;
+	padding-bottom: 40px;
+	background: rgb(255,255,255); /* Old browsers */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q4ZDhkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+	background: -moz-linear-gradient(-45deg, rgb(255,255,255) 0%, rgb(216,216,216) 100%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgb(255,255,255)), color-stop(100%,rgb(216,216,216)));
+	background: -webkit-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
+	background: -o-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
+	background: -ms-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
+	background: linear-gradient(135deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d8d8d8',GradientType=1 );
+	background-attachment: fixed;
+	background-size: cover;
+}
+
+body:not([ie9]) {
+	filter: none;
+}
+
+/* Custom container */
+.container-narrow {
+	margin: 0 auto;
+	max-width: 700px;
+}
+.container-narrow > hr {
+	margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+	margin: 60px 0;
+	text-align: center;
+}
+.jumbotron h1 {
+	font-size: 4em;
+	line-height: 1;
+}
+.jumbotron .btn {
+	font-size: 21px;
+	padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+	margin: 60px 0;
+}
+.marketing p + h4 {
+	margin-top: 28px;
+}
+
+.question {
+	border-bottom: #ccc 1px solid;
+	padding: 1em;
+	margin-bottom: 1em;
+}
+label.error {
+	color: red;
+	position:relative;
+	left: 2em;
+	top: 0;
+}
+.chart {
+	width: 90%;
+	height: 300px;
+	margin: 1em auto;
+}
+.modal .chart {
+	width: 88%;
+}

@@ -47,15 +47,15 @@
 	</head>
 	
 	<body>
-		<div style="position: fixed; width: 100%; height: 100%; overflow: auto;">
+		<div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden;">
 			<form action="../question/<%= id %>/submit" method="post" id="answer">
 				<div id="widget" class="carousel slide">
 					<div class="carousel-inner">
 						<% for(var i = 0; i < questions.length; i++){
 							var q = questions[i];
 						%>
-						<div class="question item <%= i == 0 ? 'active' : '' %>">
-							<p class="lead"><span><%= i+1 %>.</span> <%= q.name %></p>
+						<div class="question item <%= i == 0 ? 'active' : '' %>" itemscope itemtype="http://schema.org/Enumeration">
+							<p class="lead"><% if(q.required){ %><span class="label label-important">*</span><% } %> <span class="muted"><%= i+1 %>.</span> <span itemprop="name"><%= q.name %></span></p>
 							<% 
 								switch(q.type){
 								case "fillin":
@@ -93,10 +93,11 @@
 								if(i === questions.length - 1) {
 								%>
 									<br />
-									<input type="submit" class="btn btn-block" value="Submit" />
+									<input type="submit" class="btn btn-large" value="Submit" />
 								<%
 								}
 								%>
+								<p>Question with <span class="label label-important">*</span> is required to finish.</p>
 						</div>
 						<% } %>
 					</div>
@@ -111,6 +112,7 @@
 			</div>
 			<div class="modal-body">
 				<p>Thanks for filling this poll.</p>
+				<a class="btn" href="../stats/<%= id %>?hideui=1" target="_self">View statistics</a>
 			</div>
 			<div class="modal-footer">
 			</div>

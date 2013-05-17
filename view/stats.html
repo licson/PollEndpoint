@@ -9,160 +9,35 @@
 		<meta name="application-name" content="PollEndpoint" />	
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
-		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet">
-		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
-		<style type="text/css">
-		body {
-			padding-top: 20px;
-			padding-bottom: 40px;
-		}
+		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
+		<link type="text/css" href="../assets/css/page.css" rel="stylesheet" />
 		
-		/* Custom container */
-		.container-narrow {
-			margin: 0 auto;
-			max-width: 700px;
-		}
-		.container-narrow > hr {
-			margin: 30px 0;
-		}
-		
-		/* Main marketing message and sign up button */
-		.jumbotron {
-			margin: 60px 0;
-			text-align: center;
-		}
-		.jumbotron h1 {
-			font-size: 60px;
-			line-height: 1;
-		}
-		.jumbotron .btn {
-			font-size: 21px;
-			padding: 14px 24px;
-		}
-		
-		/* Supporting marketing content */
-		.marketing {
-			margin: 60px 0;
-		}
-		.marketing p + h4 {
-			margin-top: 28px;
-		}
-		
-		.chart {
-			width: 90%;
-			height: 300px;
-			margin: 1em auto;
-		}
-		.modal .chart {
-			width: 88%;
-		}
-		</style>
 		<script type="text/javascript" src="../assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../assets/js/flotr2.min.js"></script>
 		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
-		<script>
-		$(function(){
-			var update = function(){
-				$.ajax({
-					url:'./<%= id %>/time',
-					dataType:'json',
-					cache:false,
-					success:function(data){
-						if(data.length <= 1){
-							$('#tips-overview').show(500);
-						}
-						Flotr.draw($('#date')[0],[{data:data,label:'Poll submitted'}],{
-							title:'People answered per day',
-							xaxis:{
-								mode:'time',
-								title:'Time'
-							},
-							yaxis:{
-								min:0
-							},
-							mouse:{
-								track:true,
-								relative:true,
-								trackFormatter:function(o){
-									return o.y+' Persons';
-								}
-							},
-							points:{
-								show:true
-							},
-							lines:{
-								show:true
-							}
-						});
-					}
-				});
-				setTimeout(update,5000);
-			};
-			update();
-			
-			$('tr[data-id]').click(function(){
-				var id = $(this).attr('data-id');
-				$.ajax({
-					url:'./question/'+id,
-					cache:false,
-					dataType:'json',
-					success:function(data){
-						if(data.html){
-							$('#ques_dialog .modal-body :not(.chart)').remove();
-							$('#ques_dialog .modal-body .chart').hide();
-							$('#ques_dialog .modal-body').append(data.html);
-							$('#ques_dialog').modal('show');
-						}
-						else {
-							$('#ques_dialog .modal-body :not(.chart)').remove();
-							$('#ques_dialog .chart').show();
-							$('#ques_dialog').modal('show');
-							$('#ques_dialog').on('shown',function(){
-								Flotr.draw($('#ques_dialog .chart')[0],data,{
-									title:'Choices answered',
-									xaxis:{
-										showLabels:false
-									},
-									yaxis:{
-										showLabels:false
-									},
-									pie:{
-										show:true,
-										explode:6
-									},
-									mouse:{
-										track:true,
-										relative:true,
-										trackFormatter:function(o){
-											return o.y+' Persons';
-										}
-									}
-								});
-							});
-						}
-					}
-				});
-			});	
-		});
-		</script>
+		<script type="text/javascript" src="../assets/js/page_stats.js"></script>
+		<script> window.ques_id = '<%= id %>'; </script>
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="masthead">
-				<ul class="nav nav-pills pull-right">
-					<li><a href="/">Home</a></li>
-					<li><a href="/about">About</a></li>
-					<li class="dropdown">
-						<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact</a>
-						<ul class="dropdown-menu">
-							<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
-							<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
-							<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
-						</ul>
-					</li>
-				</ul>
-				<h3 class="muted">PollEndpoint</h3>
+			<div class="navbar navbar-static-top">
+				<div class="navbar-inner">
+					<a class="brand" href="../">PollEndpoint</a>
+					<ul class="nav">
+						<li><a href="/">Home</a></li>
+						<li><a href="/about">About</a></li>
+						<li class="dropdown">
+							<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">Contact <i class="carat"></i></a>
+							<ul class="dropdown-menu">
+								<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook page</a></li>
+								<li><a href="https://github.com/licson0729/PollEndpoint">Github repo</a></li>
+								<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">Contact me</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 			</div>
 		<hr>
 		<div class="jumbotron">
@@ -170,7 +45,7 @@
 			<p class="lead">Public statistics</p>
 		</div>
 		<hr>
-		<div>
+		<div id="stats">
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
 				<li><a href="#questions" data-toggle="tab">Questions</a></li>
