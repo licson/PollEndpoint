@@ -1,17 +1,16 @@
 body {
 	padding-top: 20px;
 	padding-bottom: 40px;
-	background: rgb(255,255,255); /* Old browsers */
-	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q4ZDhkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
-	background: -moz-linear-gradient(-45deg, rgb(255,255,255) 0%, rgb(216,216,216) 100%);
-	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgb(255,255,255)), color-stop(100%,rgb(216,216,216)));
-	background: -webkit-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
-	background: -o-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
-	background: -ms-linear-gradient(-45deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
-	background: linear-gradient(135deg, rgb(255,255,255) 0%,rgb(216,216,216) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d8d8d8',GradientType=1 );
+	background: rgb(252,254,255);
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmNmZWZmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNDklIiBzdG9wLWNvbG9yPSIjZjdmN2Y3IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q2ZDZkNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+	background: -moz-linear-gradient(-45deg,  rgba(252,254,255,1) 0%, rgba(247,247,247,1) 49%, rgba(214,214,214,1) 100%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(252,254,255,1)), color-stop(49%,rgba(247,247,247,1)), color-stop(100%,rgba(214,214,214,1)));
+	background: -webkit-linear-gradient(-45deg,  rgba(252,254,255,1) 0%,rgba(247,247,247,1) 49%,rgba(214,214,214,1) 100%);
+	background: -o-linear-gradient(-45deg,  rgba(252,254,255,1) 0%,rgba(247,247,247,1) 49%,rgba(214,214,214,1) 100%);
+	background: -ms-linear-gradient(-45deg,  rgba(252,254,255,1) 0%,rgba(247,247,247,1) 49%,rgba(214,214,214,1) 100%);
+	background: linear-gradient(-45deg,  rgba(252,254,255,1) 0%,rgba(247,247,247,1) 49%,rgba(214,214,214,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfeff', endColorstr='#d6d6d6',GradientType=1 );
 	background-attachment: fixed;
-	background-size: cover;
 }
 
 body:not([ie9]) {
@@ -67,4 +66,105 @@ label.error {
 }
 .modal .chart {
 	width: 88%;
+}
+
+.flotr-datagrid-container {
+	background:#fff;
+	border:1px solid #999;
+	border-bottom:none;
+}
+
+.flotr-datagrid {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+
+.flotr-datagrid td,.flotr-datagrid th {
+	border:1px solid #ccc;
+	min-width:2em;
+	padding:1px 3px;
+}
+
+.flotr-datagrid tr:hover,.flotr-datagrid col.hover {
+	background:#f3f3f3;
+}
+
+.flotr-datagrid tr:hover th,.flotr-datagrid th.hover {
+	background:#999;
+	color:#fff;
+}
+
+.flotr-datagrid th {
+	background:#e3e3e3;
+	border:2px outset #fff;
+	text-align:left;
+}
+
+.flotr-datagrid-toolbar {
+	background:#f9f9f9;
+	border-bottom:1px solid #ccc;
+	padding:1px;
+}
+
+.flotr-datagrid .first-row th {
+	text-align:center;
+}
+
+.flotr-canvas {
+	margin-bottom:-3px;
+	padding-bottom:1px;
+}
+
+.flotr-tabs-group {
+	border-top:1px solid #999;
+}
+
+.flotr-tab {
+	-moz-border-radius:0 0 4px 4px;
+	-moz-opacity:.5;
+	-webkit-border-bottom-left-radius:4px;
+	-webkit-border-bottom-right-radius:4px;
+	border:1px solid #666;
+	border-radius:0 0 4px 4px;
+	border-top:none;
+	cursor:pointer;
+	margin:0 3px;
+	opacity:0.5;
+	padding:1px 4px;
+}
+
+.flotr-tab.selected {
+	-moz-opacity:1;
+	background:#ddd;
+	opacity:1;
+}
+
+.flotr-datagrid td:hover,.flotr-tab:hover {
+	background:#ccc;
+}
+
+.search:hover {
+	background: #dedede;
+}
+
+.tour-backdrop {
+	position: absolute;
+	z-index: 1009;
+	background: #000;
+	opacity: 0.8;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+.tour-step-backdrop {
+	position: relative;
+	z-index: 1011;
+}
+
+.tour-step-background {
+	position: absolute;
+	z-index: 1010;
+	background: #fff;
+	border-radius: 6px;
 }

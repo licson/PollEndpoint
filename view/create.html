@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.tagsinput.min.js"></script>
-		<script type="text/javascript" src="assets/js/jquery.expose.min.js"></script>
+		<script type="text/javascript" src="assets/js/intro.js"></script>
 		<script type="text/javascript" src="assets/js/page_create.js"></script>
 	</head>
 	<body>
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<div class="row-fluid">
-			<div class="span4" id="step_1">
+			<div class="span4" id="step_1" data-intro="Fill in the basic information first..." data-step="1">
 				<h4>First Step</h4>
 				<p>Enter the basic information about the questionnaire.</p>
 				<form id="basic_info" action="/create/save/basic_info" method="POST">
@@ -73,17 +73,18 @@
 			<div class="span4">
 				<h4>Step 3</h4>
 				<p>Submit your poll</p>
-				<button class="btn" id="send" title="Hey!" data-content="Click here to submit!">Submit</button>
+				<button class="btn" id="send" title="Hey!" data-content="Click here to submit!" data-intro="Click this to submit." data-step="4">Submit</button>
 			</div>
 		</div>
-		<div class="modal hide fade" id="ques_dialog">
+		<em>Please pay attention: all questionnaires created without questions will considered as nothing and will be deleted from our database within an hour since it has been created. Do not spam our system through empty questionnaires. Also, please remember to click the proceed button in step 2 or else a questionnaire will NOT be correctly created.</em>
+		<div class="modal hide fade" id="ques_dialog" data-intro="Then, add some questions here." data-step="2">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h3>Set the questions</h3>
 			</div>
 			<div class="modal-body">
 				<div>
-					<button id="add" class="btn pull-right">Add questions</button>
+					<button id="add" class="btn pull-right">Add question</button>
 					<form action="/create/save/questions" method="POST" id="question_form">
 						<div id="question_sets">
 							<div class="question well">
@@ -111,7 +112,7 @@
 				<div style="display:none;">Please wait...</div>
 			</div>
 			<div class="modal-footer">
-				<a href="#" id="proceed_2" class="btn">Proceed</a>
+				<a href="#" id="proceed_2" class="btn" data-intro="Click this to save." data-step="3">Proceed</a>
 			</div>
 		</div>
 		<hr>

@@ -27,6 +27,7 @@
 	  "express":">= 3.0.0",
 	  "ejs":">= 0.8.3",
 	  "mysql":">= 2.0.0-alpha7",
+	  "async":">= 0.2.8",
 	  "nodefly":"stable"
   },
   "devDependencies": {},

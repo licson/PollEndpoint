@@ -4,7 +4,7 @@
 		<title>Error</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<base href="https://pollendpoint-licson.rhcloud.com/">
+		<base href="//pollendpoint-licson.rhcloud.com/">
 		<link type="text/css" href="/assets/css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link type="text/css" href="/assets/css/page.css" rel="stylesheet">
@@ -37,13 +37,19 @@
 			<p class="lead">Something wrong happened.</p>
 		</div>
 		<hr>
-		<p>There are some possible reasons:</p>
-		<ol>
-			<li>You're going to a page that does not exist.</li>
-			<li>We have encountered a database error.</li>
-			<li>You're naughty and try to hack the system.</li>
-		</ol>
-		<em class="muted"><%= typeof err !== "undefined" && err.toString() %></em>
+		<p>If you think it's not your problem, please report your problem at <a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20Error%20Report">licson0729@gmail.com</a> along with the debug information below:</p>
+		<div class="accordion" id="accordion2">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#error">Please provide the information below woth your error report.</a>
+				</div>
+				<div id="error" class="accordion-body collapse in">
+					<div class="accordion-inner">
+						<em class="muted"><%= typeof err !== "undefined" && err.toString() %></em>
+					</div>
+				</div>
+			</div>
+		</div>
 		<hr>
 		<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
 		<div class="row-fluid marketing">

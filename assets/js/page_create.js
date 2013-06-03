@@ -6,20 +6,24 @@ $(function(){
 	$('#status .alert .close').click(function(){
 		$('#status .alert').hide(500);
 	});
-	$('#basic_info').ajaxForm({
-		dataType:'json',
-		success:function(response){
-			if(response.success){
-				id = response.id;
-				$('.p_id').val(response.id);
-				step_1_completed = true;
-				$('#ques_dialog').modal('show');
+	$('#basic_info').submit(function(e){
+		e.preventDefault();
+		$('#basic_info').ajaxSubmit({
+			dataType:'json',
+			success:function(response){
+				if(response.success){
+					id = response.id;
+					$('.p_id').val(response.id);
+					step_1_completed = true;
+					$('#ques_dialog').modal('show');
+				}
+				else {
+					$('#status .alert .message').text(response.message);
+					$('#status .alert').show(500);
+				}
 			}
-			else {
-				$('#status .alert .message').text(response.message);
-				$('#status .alert').show(500);
-			}
-		}
+		});
+		//$('#ques_dialog').modal('show');
 	});
 	$('#proceed_2').click(function(){
 		if(step_1_completed){
@@ -35,8 +39,6 @@ $(function(){
 							step_2_completed = true;
 							$('html,body').animate({scrollTop:0},500);
 							$('#ques_dialog').modal('hide');
-							$('#send').expose();
-							$('#send').popover().popover('show');
 						}
 						else {
 							$('#status .alert .message').text(response.message);
@@ -87,4 +89,18 @@ $(function(){
 		}
 	});
 	$('.tags:first,#basic_info input[name=keywords]').tagsInput();
+	
+	//Tutorial
+	var tour = new Tour({
+		useLocalStorage: true
+	});
+	$('[data-intro]').each(function(i){
+		tour.addStep({
+			element: this,
+			placement: 'top',
+			title: 'Step '+ (i + 1),
+			content: $(this).attr('data-intro')
+		});
+	});
+	tour.start();
 });

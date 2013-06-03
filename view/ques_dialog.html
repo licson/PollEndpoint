@@ -1,27 +1,22 @@
-<% switch(type){
-case 'fillin':
-%>
 <script>
 $(function(){
-	$('#fillin-search').ajaxForm({
-		dataType:'json',
-		success:function(data){
-			var table = $('#fillin-search + table');
-			$('tbody tr',table).remove();
-			$.each(data,function(i){
-				$('tbody',table).append('<tr><td>$1</td><td>$2</td></tr>'.replace('$1',i+1).replace('$2',data[i].value));
-			});
-			if(data.length == 0){
-				$('tbody',table).append('<tr><td rowspan="2"><em>No results avaliable.</em></td></tr>');
-			}
-		}
-	});
+	$('#question_dialog_answer_table').dataTable();
 });
 </script>
-<form method="get" action="./question/<%= id %>/search" id="fillin-search" class="form-search"><input type="text" class="input-medium search-query" name="q"><input type="submit" class="btn" value="Search"/></form>
-<table class="table table-striped"><caption>Fill in answers</caption><thead><tr><th>#</th><th>Answers</th></tr></thead><tbody>
-<% for(var i = 0; i < data.length; i++){ %><tr><td><%= i+1 %></td><td><%= data[i].value %></td></tr><% } %>
-</tbody></table>
-<% break;
-}
-%>
+<table class="table table-striped" id="question_dialog_answer_table">
+	<caption>Fill in answers</caption>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Answers</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% data.forEach(function(d,i){ %>
+		<tr>
+			<td><%= i+1 %></td>
+			<td><%= d.value %></td>
+		</tr>
+		<% }) -%>
+	</tbody>
+</table>

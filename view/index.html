@@ -28,6 +28,11 @@
 		
 		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script>
+		$(function(){
+			$('li[title]').tooltip();
+		});
+		</script>
 	</head>
 	<body>
 		<div class="container-narrow">
@@ -56,8 +61,10 @@
 			</div>
 			<hr>
 			<form class="form-search" action="/search" method="get">
-				<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." />
-				<input type="submit" class="btn" value="Search" />
+				<div class="input-append">
+					<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." />
+					<input type="submit" class="btn" value="Search" />
+				</div>
 			</form>
 			<div class="row-fluid">
 				<div class="span6">
@@ -67,7 +74,7 @@
 					<%
 						for(var i = 0; i < polls.latest.length; i++){
 					%>
-						<li><a href="question/<%= polls.latest[i].id %>"><%= polls.latest[i].name %></a></li>
+						<li title="Created at <%= polls.latest[i].created_at %>"><a href="question/<%= polls.latest[i].id %>"><i class="icon-th-list"></i> <%= polls.latest[i].name %></a></li>
 					<% } %>
 					</ul>
 					<% } else { %>
@@ -81,7 +88,7 @@
 					<%
 						for(var i = 0; i < polls.popular.length; i++){
 					%>
-						<li><a href="question/<%= polls.popular[i].id %>"><%= polls.popular[i].name %></a></li>
+						<li title="Created at <%= polls.popular[i].created_at %>"><a href="question/<%= polls.popular[i].id %>"><i class="icon-th-list"></i> <%= polls.popular[i].name %></a></li>
 					<% } %>
 					</ul>
 					<% } else { %>
@@ -110,7 +117,7 @@
 				<div class="span12">
 					<h4>Follow us on Facebook!</h4>
 					<p>We will post the notices on our Facebook page.</p>
-					<iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FPollendpoint%2F487395521320925&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;font=tahoma&amp;colorscheme=light&amp;action=recommend&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>
+					<iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FPollendpoint%2F487395521320925&amp;send=false&amp;layout=standard&amp;width=200&amp;show_faces=true&amp;font=tahoma&amp;colorscheme=light&amp;action=recommend&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100%; height:80px;" allowTransparency="true"></iframe>
 				</div>
 			</div>
 			<hr>

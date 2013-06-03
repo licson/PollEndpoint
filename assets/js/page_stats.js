@@ -1,10 +1,11 @@
 $(function(){
 	if(window.location.search.indexOf('hideui=1')>-1){
-		$('div:not(#stats)').hide();
+		$('*').hide();
+		$('#stats').show();
 	}
 	var update = function(){
 		$.ajax({
-			url:'./'+window.ques_id+'/time',
+			url:'./time/'+window.ques_id,
 			dataType:'json',
 			cache:false,
 			success:function(data){
@@ -36,11 +37,13 @@ $(function(){
 				});
 			}
 		});
-		setTimeout(update,5000);
+		//setTimeout(update,5000);
 	};
 	update();
 	
-	$('tr[data-id]').click(function(){
+	$('#refresh').click(update);
+	
+	$('.questions tr[data-id]').click(function(){
 		var id = $(this).attr('data-id');
 		$.ajax({
 			url:'./question/'+id,
@@ -48,14 +51,16 @@ $(function(){
 			dataType:'json',
 			success:function(data){
 				if(data.html){
-					$('#ques_dialog .modal-body :not(.chart)').remove();
+					$('#ques_dialog .modal-body :not(.chart) :not(.answers)').remove();
 					$('#ques_dialog .modal-body .chart').hide();
+					$('#ques_dialog .modal-body .answers').hide();
 					$('#ques_dialog .modal-body').append(data.html);
 					$('#ques_dialog').modal('show');
 				}
 				else {
-					$('#ques_dialog .modal-body :not(.chart)').remove();
+					$('#ques_dialog .modal-body :not(.chart) :not(.answers)').remove();
 					$('#ques_dialog .chart').show();
+					$('#ques_dialog .modal-body .answers').hide();
 					$('#ques_dialog').modal('show');
 					$('#ques_dialog').on('shown',function(){
 						Flotr.draw($('#ques_dialog .chart')[0],data,{
@@ -74,7 +79,13 @@ $(function(){
 								track:true,
 								relative:true,
 								trackFormatter:function(o){
-									return o.y+' Persons';
+									return Math.floor(o.y)+' Persons';
+								}
+							},
+							spreadsheet:{
+								show:true,
+								tickFormatter:function(){
+									return "Count";
 								}
 							}
 						});
@@ -82,5 +93,26 @@ $(function(){
 				}
 			}
 		});
-	});	
+	});
+	$('.questionnaires').dataTable();
+	$(document).on('click','.questionnaires tr[data-id]',function(){
+		var time = $(this).attr('data-id');
+		$.ajax({
+			url:'./questionnaire/'+window.ques_id+'/'+time,
+			dataType:'json',
+			cache:false,
+			success:function(data){
+				$('#ques_dialog .modal-body :not(.chart) :not(.answers)').remove();
+				$('#ques_dialog .modal-body .chart').hide();
+				var container = $('#ques_dialog .modal-body .answers').show();
+				$.each(data,function(i,ele){
+					$('<div class="well">')
+					.append($('<p>',{text: 'Question: '+ele.name}))
+					.append($('<em>',{text: 'Answer: '+ele.value}))
+					.appendTo(container);
+				});
+				$('#ques_dialog').modal('show');
+			}
+		});
+	});
 });

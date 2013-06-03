@@ -12,12 +12,17 @@
 		<link type="text/css" href="../assets/css/bootstrap.min.css" rel="stylesheet" />
 		<link type="text/css" href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link type="text/css" href="../assets/css/page.css" rel="stylesheet" />
+			<link type="text/css" href="../assets/css/jquery.dataTables.css" rel="stylesheet" />
 		
 		<script type="text/javascript" src="../assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../assets/js/flotr2.min.js"></script>
 		<script type="text/javascript" src="../assets/js/jquery.form.js"></script>
+		<script type="text/javascript" src="../assets/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="../assets/js/page_stats.js"></script>
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="../assets/js/flashcanvas.js"></script>
+		<![endif]-->
 		<script> window.ques_id = '<%= id %>'; </script>
 	</head>
 	<body>
@@ -49,9 +54,11 @@
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
 				<li><a href="#questions" data-toggle="tab">Questions</a></li>
+				<li><a href="#submits" data-toggle="tab">All questionnaires</a></li>
 			</ul>
 			<div class="tab-content">
 				<div id="overview" class="tab-pane active">
+					<a href="#" id="refresh" class="btn pull-right"><i class="icon-refresh"></i></a>
 					<h3>Overview</h3>
 					<div class="alert alert-block alert-info" style="display: none;" id="tips-overview">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -73,7 +80,7 @@
 						<strong>Tips</strong>
 						<p>Click on the rows to see more statistics about the question.</p>
 					</div>
-					<table class="table table-striped">
+					<table class="table table-striped questions">
 						<thead>
 							<tr>
 								<th>#</th>
@@ -82,15 +89,38 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% for(var i = 0; i < questions.length; i++){ %>
-							<tr data-id="<%= questions[i].id %>">
+							<% questions.forEach(function(question,i){ %>
+							<tr data-id="<%= question.id %>">
 								<td><%= i+1 %></td>
-								<td><%= questions[i].name %></td>
-								<td><%= questions[i].type.replace('fillin','Fill in').replace(/^mc/,'Multiple Choices').replace(/^mmc/,'Multiple Answers') %></td>
+								<td><%= question.name %></td>
+								<td><%= question.type.replace('fillin','Fill in').replace(/^mc/,'Multiple Choices').replace(/^mmc/,'Multiple Answers') %></td>
 							</tr>
-							<% } %>
+							<% }); %>
 						</tbody>
-					<table>
+					</table>
+				</div>
+				<div id="submits" class="tab-pane">
+					<div class="alert alert-block alert-info">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						<strong>Tips</strong>
+						<p>Click on the rows to see each of the finished questionnaire.</p>
+					</div>
+					<table class="table table-striped questionnaires">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Finished at</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% questionnaires.forEach(function(questionnaire,i){ %>
+							<tr data-id="<%- questionnaire.date %>">
+								<td><%= i+1 %></td>
+								<td><%= questionnaire.date %></td>
+							</tr>
+							<% }) %>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -101,6 +131,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="chart"></div>
+				<div class="answers"></div>
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal">Close</a>

@@ -52,6 +52,12 @@
 				<p class="lead" itemprop="description">Search result for &quot;<%= keyword %>&quot;</p>
 			</div>
 			<hr>
+			<form class="form-search" action="/search" method="get">
+				<div class="input-append">
+					<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." value="<%= keyword %>" />
+					<input type="submit" class="btn" value="Search" />
+				</div>
+			</form>
 			<div id="search-result">
 				<%
 					if(result.length == 0){
@@ -62,7 +68,7 @@
 					else {
 						result.forEach(function(result){
 				%>
-				<div class="media">
+				<div class="media search">
 					<a class="pull-left" href="question/<%= result.id %>">
 						<img src="assets/img/file-64.png" width="49" height="64" />
 					</a>
