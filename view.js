@@ -10,11 +10,17 @@
 var ejs = require('ejs');
 var fs = require('fs');
 
+var supportedLangs = ['en', 'zh-tw'];
+
 module.exports = {
-	page:function(name,opts){
-		return ejs.render(fs.readFileSync(__dirname + '/view/' + name + '.html','utf-8'),opts);
+	page: function(name, opts, lang){
+		lang = String(lang);
+		if(supportedLangs.indexOf(lang.toLowerCase()) < 0) lang = supportedLangs[0];
+		return ejs.render(fs.readFileSync(__dirname + '/view/' + lang + '/' + name + '.html','utf-8'),opts);
 	},
-	error:function(err){
-		return ejs.render(fs.readFileSync(__dirname + '/view/error.html','utf-8'),{err:err});
+	error: function(err, lang){
+		lang = String(lang);
+		if(supportedLangs.indexOf(lang.toLowerCase()) < 0) lang = supportedLangs[0];
+		return ejs.render(fs.readFileSync(__dirname + '/view/' + lang + '/error.html','utf-8'),{err:err});
 	}
 }

@@ -45,7 +45,7 @@
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="navbar navbar-static-top">
+			<div class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<a class="brand" href="../">PollEndpoint</a>
 					<ul class="nav">
@@ -62,13 +62,11 @@
 					</ul>
 				</div>
 			</div>
-		<hr>
 		<div class="jumbotron" itemscope itemtype="http://schema.org/WPHeader">
 			<h1 itemprop="name"><%= meta[0].name %></h1>
 			<p class="lead" itemprop="description"><%= meta[0].desc %></p>
 		</div>
-		<hr>
-		<div>
+		<div class="content">
 			<a class="btn pull-right" href="../stats/<%= id %>">Statistics</a>
 			<h2>Questions</h2>
 			<form action="./<%= id %>/submit" method="POST" id="answer">
@@ -118,7 +116,6 @@
 				<button class="btn btn-large">Submit</button>
 			</form>
 		</div>
-		<hr>
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>

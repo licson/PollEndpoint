@@ -27,7 +27,7 @@
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="navbar navbar-static-top">
+			<div class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<a class="brand" href="../">PollEndpoint</a>
 					<ul class="nav">
@@ -44,13 +44,11 @@
 					</ul>
 				</div>
 			</div>
-		<hr>
 		<div class="jumbotron">
 			<h1>Statistics for <%= meta.name %></h1>
 			<p class="lead">Public statistics</p>
 		</div>
-		<hr>
-		<div id="stats">
+		<div id="stats" class="content">
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
 				<li><a href="#questions" data-toggle="tab">Questions</a></li>
@@ -137,7 +135,6 @@
 				<a href="#" class="btn" data-dismiss="modal">Close</a>
 			</div>
 		</div>
-		<hr>
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>

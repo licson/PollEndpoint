@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+	<head>
+		<title>PollEndpoint</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="Keywords" content="questionnaire,free,open-source,online questionnaire,online polls,platform,pollendpoint,high performance,easy to use, node.js,system,mobile compatible,responsive design,clean" />
+		<meta name="description" content="PollEndpoint is a free, open-source questionnaire platform created by Licson Lee that is easy to use and fast. It's also compatible with mobile browsers that makes your questionnaires available in more platforms." />
+		<meta name="author" content="Licson Lee" />
+		<meta name="application-name" content="PollEndpoint" />
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
+		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/jquery.tagsinput.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/page.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.form.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="assets/js/jquery.tagsinput.min.js"></script>
+		<script type="text/javascript" src="assets/js/page_create.js"></script>
+	</head>
+	<body>
+		<div class="container-narrow">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<a class="brand" href="/">PollEndpoint</a>
+					<ul class="nav">
+						<li><a href="/">首頁</a></li>
+						<li><a href="/about">關於</a></li>
+						<li class="dropdown">
+							<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">聯絡我 <i class="carat"></i></a>
+							<ul class="dropdown-menu">
+								<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook 專頁</a></li>
+								<li><a href="https://github.com/licson0729/PollEndpoint">GitHub 程式庫</a></li>
+								<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">聯絡我</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		<div class="jumbotron">
+			<h1>新增一個問卷</h1>
+			<p>開始新增問卷！</p>
+		</div>
+		<div id="status">
+			<div class="alert" style="display:none;">
+				<a href="#" class="close">&times;</a>
+				<strong>警告！</strong> <span class="message"></span>
+			</div>
+		</div>
+		<div id="msform">
+			<ul id="progressbar">
+				<li class="active">第一步</li>
+				<li>設置問卷問題</li>
+			</ul>
+			<fieldset>
+				<h2 class="fs-title">第一步</h2>
+				<h3 class="fs-subtitle">填寫關於本問卷的資訊</h3>
+				<form id="basic_info" action="/create/save/basic_info" method="POST">
+					<input type="text" name="name" placeholder="問卷名稱" />
+					<input type="text" name="keywords" placeholder="問卷的關鍵字(搜尋引擎)" />
+					<textarea name="desc" placeholder="描述"></textarea>
+					<input type="button" name="next" class="next action-button" id="proceed_1" value="下一步" />
+				</form>
+			</fieldset>
+			<fieldset>
+				<h2 class="fs-title">第二步</h2>
+				<h3 class="fs-subtitle">設置問卷問題</h3>
+				<button id="add" class="btn pull-right">新增問題</button>
+				<form action="/create/save/questions" method="POST" id="question_form">
+					<div id="question_sets">
+						<div class="question well">
+							<input type="hidden" value="" name="questions[belongs]" class="p_id required"/>
+							<label>標題 
+								<input name="questions[name]" type="text" placeholder="Name of the question" title="Name of the question" class="required" />
+							</label>
+							<label>問題類型 
+								<select name="questions[type]" title="Type of question" class="required">
+									<option value="fillin">填空</option>
+									<option value="mc">多重選擇</option>
+									<option value="mmc">多個答案</option>
+								</select>
+							</label>
+							<label>Choices (Only for Multiple Choices and Multiple Answers) 
+								<input type="text" name="questions[choices]" placeholder="Choices" title="Type in each choice and press enter to enter another choice." class="tags" />
+							</label>
+							<label>必須
+								<input type="checkbox" name="questions[required]" value="1" checked class="required"/>
+							</label>
+						</div>
+					</div>
+					<input type="button" name="previous" class="previous action-button" value="Previous" />
+					<input type="submit" name="submit" class="submit action-button" id="proceed_2" value="Submit" />
+				</form>
+			</fieldset>
+		</div>
+		<span class="clearfix"></span>
+		<div class="content">
+			<em>請注意所有沒有問題的問卷會考慮什麼，將在一個小時內從我們的數據庫中刪除，因為它已經被創建。不要垃圾郵件我們的系統通過空問卷。另外，請記得點擊“繼續”按鈕，在步驟2中，否則將無法創建正確的一項調查。</em>
+		</div>
+		<div class="footer">
+			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
+		</div>
+		<div id="google_translate_element"></div>
+		<script type="text/javascript">
+		function googleTranslateElementInit(){
+			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
+		}
+		</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+		<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-39218046-1']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
+	</body>
+</html>

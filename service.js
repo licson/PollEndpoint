@@ -41,33 +41,38 @@ app.enable('trust proxy');
 
 //our index page
 app.get('/',function(req,res){
-	sql.conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC',function(err,latest){
+	async.parallel({
+		latest: function(cb){
+			sql.conn.query('SELECT * FROM `polls` ORDER BY `created_at` DESC LIMIT 0, 10',function(err,latest){
+				cb(err,latest);
+			});
+		},
+		popular: function(cb){
+			sql.conn.query('SELECT p.`id`, p.`name`, p.`created_at` FROM `polls` AS p LEFT JOIN (SELECT COUNT(*) AS `count`, `poll_id`, `time` FROM `stats` GROUP BY `poll_id`) AS s ON p.`id` = s.`poll_id` ORDER BY s.`count` DESC LIMIT 0, 10',function(err,popular){
+				cb(err,popular);
+			});
+		}
+	},function(err,result){
 		if(err){
-			res.send(view.error(err));
+			res.send(view.error(err, req.acceptedCharsets[0]));
 		}
 		else {
-			sql.conn.query('SELECT p.`id`, p.`name`, p.`created_at` FROM `polls` AS p LEFT JOIN (SELECT COUNT(*) AS `count`, `poll_id`, `time` FROM `stats` GROUP BY `poll_id`) AS s ON p.`id` = s.`poll_id` ORDER BY s.`count` DESC LIMIT 0, 10',function(err,popular){
-				if(err){
+			res.send(view.page('index',{
+				polls:{
+					latest: result.latest,
+					popular: result.popular
 				}
-				else {
-				res.send(view.page('index',{
-					polls:{
-						latest:latest,
-						popular:popular
-					}
-				}));
-				}
-			});
+			}, req.acceptedCharsets[0]));
 		}
 	});
 });
 
 app.get('/thanks',function(req,res){
-	res.send(view.page('thanks',{}));
+	res.send(view.page('thanks', {}, req.acceptedCharsets[0]));
 });
 
 app.get('/about',function(req,res){
-	res.send(view.page('about',{}));
+	res.send(view.page('about', {}, req.acceptedCharsets[0]));
 });
 
 app.get('/question/:id',function(req,res){
@@ -86,7 +91,7 @@ app.get('/question/:id',function(req,res){
 	},
 	function(err,result){
 		if(err){
-			res.send(view.error(err));
+			res.send(view.error(err, req.acceptedCharsets[0]));
 		}
 		else {
 			if(result.data.length > 0){
@@ -94,10 +99,10 @@ app.get('/question/:id',function(req,res){
 					id:id,
 					meta:result.info,
 					questions:result.data
-				}));
+				}, req.acceptedCharsets[0]));
 			}
 			else {
-				res.send(view.error(new Error('The poll specified does not exists anymore.')));
+				res.send(view.error(new Error('The poll specified does not exists anymore.'), req.acceptedCharsets[0]));
 			}
 		}
 	});
@@ -127,10 +132,10 @@ app.get('/widget/:id',function(req,res){
 					id:id,
 					meta:result.info,
 					questions:result.data
-				}));
+				}, req.acceptedCharsets[0]));
 			}
 			else {
-				res.send(view.error(new Error('The poll specified does not exists anymore.')));
+				res.send(view.error(new Error('The poll specified does not exists anymore.'), req.acceptedCharsets[0]));
 			}
 		}
 	});
@@ -180,28 +185,28 @@ app.get('/sitemap',function(req,res){
 });
 
 app.get('/search',function(req,res){
-	var keywords = req.query.q;
+	var keywords = db.escape(req.query.q).replace(/^'|'$/g,'');
 	var page = parseInt(typeof req.query.page === "undefined" ? 1 : req.query.page);
-	sql.conn.query('SELECT count(*) AS `count` FROM `polls` WHERE `name` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `keywords` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `desc` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\'',function(err,rows){
+	sql.conn.query('SELECT count(*) AS `count` FROM `polls` WHERE `name` LIKE \'%'+keywords+'%\' OR `keywords` LIKE \'%'+keywords+'%\' OR `desc` LIKE \'%'+keywords+'%\'',function(err,rows){
 		if(!err){
 			var count = rows[0].count;
-			sql.conn.query('SELECT * FROM `polls` WHERE `name` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `keywords` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' OR `desc` LIKE \'%'+db.escape(keywords).replace(/^'|'$/g,'')+'%\' LIMIT '+(page-1)*20+', 20',function(err,result){
+			sql.conn.query('SELECT * FROM `polls` WHERE `name` LIKE \'%'+keywords+'%\' OR `keywords` LIKE \'%'+keywords+'%\' OR `desc` LIKE \'%'+keywords+'%\' LIMIT '+(page-1)*5+', 5',function(err,result){
 				if(!err){
 					res.send(view.page('search',{
 						keyword: keywords,
 						result: result,
 						page: page,
 						count: count,
-						limit: 20
-					}));
+						limit: 5
+					}, req.acceptedCharsets[0]));
 				}
 				else {
-					res.send(view.error(err));
+					res.send(view.error(err, req.acceptedCharsets[0]));
 				}
 			});
 		}
 		else {
-			res.send(view.error(err));
+			res.send(view.error(err, req.acceptedCharsets[0]));
 		}
 	});
 });
@@ -230,13 +235,13 @@ app.post('/question/:id/submit',function(req,res){
 });
 
 app.get('/create',function(req,res){
-	res.send(view.page('create',{}));
+	res.send(view.page('create',{} ,req.acceptedCharsets[0]));
 });
 
 app.post('/create/save/basic_info',function(req,res){
 	var data = req.body;
 	data.id = genID(25);
-	if(!(data.name == '' || data.desc == '' || data.keywords == '')){
+	if(!(data.name.trim() == '' || data.desc.trim() == '' || data.keywords.trim() == '')){
 		sql.conn.query('INSERT INTO `polls` SET ?',data,function(err){
 			if(!err){
 				res.json({success:true,id:data.id});
@@ -257,8 +262,7 @@ app.post('/create/save/questions',function(req,res){
 	var date = new Date();
 	var data = [];
 	date.setSeconds(0);
-	console.log(req.body);
-	if(req.body.questions.belongs instanceof Array){
+	if(Array.isArray(req.body.questions.belongs)){
 		for(var i = 0; i < req.body.questions.belongs.length; i++){
 			date.setSeconds(i+1);
 			var q = {
@@ -350,7 +354,7 @@ app.get('/stats/:id',function(req,res){
 					id:id,
 					questions:result.questions,
 					questionnaires:result.questionnaires
-				}));
+				}, req.acceptedCharsets[0]));
 			}
 		}
 	});

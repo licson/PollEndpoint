@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="navbar navbar-static-top">
+			<div class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<a class="brand" href="/">PollEndpoint</a>
 					<ul class="nav">
@@ -31,45 +31,44 @@
 					</ul>
 				</div>
 			</div>
-		<hr>
 		<div class="jumbotron">
 			<h1>Oops.</h1>
 			<p class="lead">Something wrong happened.</p>
 		</div>
-		<hr>
-		<p>If you think it's not your problem, please report your problem at <a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20Error%20Report">licson0729@gmail.com</a> along with the debug information below:</p>
-		<div class="accordion" id="accordion2">
-			<div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#error">Please provide the information below woth your error report.</a>
-				</div>
-				<div id="error" class="accordion-body collapse in">
-					<div class="accordion-inner">
-						<em class="muted"><%= typeof err !== "undefined" && err.toString() %></em>
+		<div class="content">
+			<p>If you think it's not your problem, please report your problem at <a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20Error%20Report">licson0729@gmail.com</a> along with the debug information below:</p>
+			<div class="accordion" id="accordion2">
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#error">Please provide the information below woth your error report.</a>
+					</div>
+					<div id="error" class="accordion-body collapse in">
+						<div class="accordion-inner">
+							<em class="muted"><%= typeof err !== "undefined" && err.toString() %></em>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<hr>
-		<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
-		<div class="row-fluid marketing">
-			<div class="span6">
-				<h4>Hi Performance</h4>
-				<p>PollEndpoint uses node.js, a platform for data-intensive applications, to handle the load. It's highly-scalable and event-driven that makes it fast and reliable.</p>
-				
-				<h4>Search engines optimized</h4>
-				<p>PollEndpoint is optimized for search engines to allow your questions to be spread widely.</p>
-				<p>We adopt the use of HTML5 microdata to let search engines have a better understanding of the questions.</p>
+			<hr>
+			<h2>Try PollEndpoint, an high performance, open-source question platform by Licson Lee.</h2>
+			<div class="row-fluid marketing">
+				<div class="span6">
+					<h4>Hi Performance</h4>
+					<p>PollEndpoint uses node.js, a platform for data-intensive applications, to handle the load. It's highly-scalable and event-driven that makes it fast and reliable.</p>
+					
+					<h4>Search engines optimized</h4>
+					<p>PollEndpoint is optimized for search engines to allow your questions to be spread widely.</p>
+					<p>We adopt the use of HTML5 microdata to let search engines have a better understanding of the questions.</p>
+				</div>
+				<div class="span6">
+					<h4>Easy to setup</h4>
+					<p>No accounts required. Just create the questions and that's it. (Statistics are public to everyone)</p>
+					
+					<h4>User-friendly interface</h4>
+					<p>Answer your questions in a natural way! No ads on every page and we'll never have ads.</p>
+				</div>
 			</div>
-			<div class="span6">
-				<h4>Easy to setup</h4>
-				<p>No accounts required. Just create the questions and that's it. (Statistics are public to everyone)</p>
-				
-				<h4>User-friendly interface</h4>
-				<p>Answer your questions in a natural way! No ads on every page and we'll never have ads.</p>
-			</div>
 		</div>
-		<hr>
 		<div class="footer">
 			<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 		</div>

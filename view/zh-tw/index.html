@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+	<head>
+		<title>PollEndpoint</title>
+		<!-- Site information -->
+		<meta charset="utf-8">
+		<meta name="Keywords" content="questionnaire,free,open-source,online questionnaire,online polls,platform,pollendpoint,high performance,easy to use, node.js,system,mobile compatible,responsive design,clean" />
+		<meta name="description" content="PollEndpoint is a free, open-source questionnaire platform created by Licson Lee that is easy to use and fast. It's also compatible with mobile browsers that makes your questionnaires available in more platforms." />
+		<meta name="author" content="Licson Lee" />
+		<meta name="application-name" content="PollEndpoint" />
+		<!-- Trackers -->
+		<meta name="google-site-verification" content="7tZJPkxE94HA3d8m70Jukj68vU27sF0ITmwtVf_3jbA" />
+		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
+		<meta name="msvalidate.01" content="6B39EBEDB520DC4C4679EBBADE7EB61D" />
+		<!-- For mobile phones -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Open Graph -->
+		<meta property="og:title" content="PollEndpoint" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://pollendpoint-licson.rhcloud.com/" />
+		<meta property="og:image" content="https://pollendpoint-licson.rhcloud.com/assets/img/webimage.png" />
+		<meta property="og:site_name" content="PollEndpoint" />
+		<meta property="fb:admins" content="1098332345" />
+		
+		<link type="text/css" href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link type="text/css" href="assets/css/page.css" rel="stylesheet">
+		
+		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+		<script>
+		$(function(){
+			$('li[title]').tooltip();
+		});
+		</script>
+	</head>
+	<body>
+		<div class="container-narrow">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<a class="brand" href="/">PollEndpoint</a>
+					<ul class="nav">
+						<li><a href="/">首頁</a></li>
+						<li><a href="/about">關於</a></li>
+						<li class="dropdown">
+							<a href="mailto:licson0729@gmail.com" data-toggle="dropdown">聯絡我 <i class="carat"></i></a>
+							<ul class="dropdown-menu">
+								<li><a href="https://www.facebook.com/pages/Pollendpoint/487395521320925">Facebook 專頁</a></li>
+								<li><a href="https://github.com/licson0729/PollEndpoint">GitHub 程式庫</a></li>
+								<li><a href="mailto:licson0729@gmail.com?subject=PollEndpoint%20enquiries">聯絡我</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="jumbotron" itemscope itemtype="http://schema.org/WPHeader">
+				<h1 itemprop="name">PollEndpoint</h1>
+				<p class="lead" itemprop="description">高效能,開放原始碼的問卷調查平台 by Licson Lee。</p>
+				<a class="btn btn-large btn-success" href="/create">現在就試試看！</a>
+			</div>
+			<div class="content">
+				<form class="form-search" action="/search" method="get">
+					<div class="input-append">
+						<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." />
+						<input type="submit" class="btn" value="Search" />
+					</div>
+				</form>
+				<div class="row-fluid">
+					<div class="span6">
+						<h3>最新的問卷</h3>
+						<% if(polls.latest.length){ %>
+						<ul class="nav nav-pills nav-stacked">
+						<%
+							for(var i = 0; i < polls.latest.length; i++){
+						%>
+							<li title="Created at <%= polls.latest[i].created_at %>"><a href="question/<%= polls.latest[i].id %>"><i class="icon-th-list"></i> <%= polls.latest[i].name %></a></li>
+						<% } %>
+						</ul>
+						<% } else { %>
+						<em class="muted">沒有問卷</em>
+						<% } %>
+					</div>
+					<div class="span6">
+						<h3>最受歡迎的問卷</h3>
+						<% if(polls.popular.length){ %>
+						<ul class="nav nav-pills nav-stacked">
+						<%
+							for(var i = 0; i < polls.popular.length; i++){
+						%>
+							<li title="Created at <%= polls.popular[i].created_at %>"><a href="question/<%= polls.popular[i].id %>"><i class="icon-th-list"></i> <%= polls.popular[i].name %></a></li>
+						<% } %>
+						</ul>
+						<% } else { %>
+						<em class="muted">沒有問卷</em>
+						<% } %>
+					</div>
+				</div>
+				<hr />
+				<div class="row-fluid marketing">
+					<div class="span6">
+						<img src="assets/img/marketing-fast.png" />
+						<h4>高效能</h4>
+						<p>PollEndpoint使用node.js，一個給資料型應用程式使用的平來應付負載。他的事件驅動架構使PollEndpoint保持穩定。</p>
+						
+						<h4>搜尋引擎優化</h4>
+						<p>PollEndpoint 有搜尋引擎優化，讓您的問題快速傳播。</p>
+						<p>我們採用HTML5 Microdata，使搜尋引擎可以更好的理解問卷的結構。</p>
+					</div>
+					<div class="span6">
+						<img src="assets/img/marketing-easy.png" />
+						<h4>使用簡單</h4>
+						<p>不需要帳戶。只要新增問題，就是這麼簡單！ (統計資料公開)</p>
+						
+						<h4>良好的使用介面</h4>
+						<p>用自然的方式回答您的問題！
+					沒有任何廣告在我們的頁面上，我們永遠不會有廣告。</p>
+						<p>此外，我們還提供方便閱讀且先進的統計功能。</p>
+						
+						<h4>在 Facebook 上追蹤我們</h4>
+						<p>我們會在我們的Facebook上發布最新消息。</p>
+						<iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FPollendpoint%2F487395521320925&amp;send=false&amp;layout=standard&amp;width=200&amp;show_faces=true&amp;font=tahoma&amp;colorscheme=light&amp;action=recommend&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100%; height:80px;" allowTransparency="true"></iframe>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
+			</div>
+			<div id="google_translate_element"></div>
+		</div>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+		<script type="text/javascript">
+		function googleTranslateElementInit(){
+			new google.translate.TranslateElement({pageLanguage: 'en', multilanguagePage: true, gaTrack: true, gaId: 'UA-39218046-1'}, 'google_translate_element');
+		}
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-39218046-1']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
+	</body>
+</html>

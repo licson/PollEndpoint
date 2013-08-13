@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>PollEndpoint</title>
+		<title>Search - PollEndpoint</title>
 		<!-- Site information -->
 		<meta charset="utf-8">
 		<meta name="Keywords" content="questionnaire,free,open-source,online questionnaire,online polls,platform,pollendpoint,high performance,easy to use, node.js,system,mobile compatible,responsive design,clean" />
@@ -9,15 +9,13 @@
 		<meta name="author" content="Licson Lee" />
 		<meta name="application-name" content="PollEndpoint" />
 		<!-- Trackers -->
-		<meta name="google-site-verification" content="7tZJPkxE94HA3d8m70Jukj68vU27sF0ITmwtVf_3jbA" />
 		<meta name="google-translate-customization" content="77fe593d432fcb9f-a556272c9dd07368-g8054283e1127bbec-1f" />
-		<meta name="msvalidate.01" content="6B39EBEDB520DC4C4679EBBADE7EB61D" />
 		<!-- For mobile phones -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- Open Graph -->
-		<meta property="og:title" content="PollEndpoint" />
+		<meta property="og:title" content="Search - PollEndpoint" />
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://pollendpoint-licson.rhcloud.com/" />
+		<meta property="og:url" content="https://pollendpoint-licson.rhcloud.com/search" />
 		<meta property="og:image" content="https://pollendpoint-licson.rhcloud.com/assets/img/webimage.png" />
 		<meta property="og:site_name" content="PollEndpoint" />
 		<meta property="fb:admins" content="1098332345" />
@@ -28,15 +26,10 @@
 		
 		<script type="text/javascript" src="assets/js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-		<script>
-		$(function(){
-			$('li[title]').tooltip();
-		});
-		</script>
 	</head>
 	<body>
 		<div class="container-narrow">
-			<div class="navbar navbar-static-top">
+			<div class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<a class="brand" href="/">PollEndpoint</a>
 					<ul class="nav">
@@ -53,74 +46,61 @@
 					</ul>
 				</div>
 			</div>
-			<hr>
 			<div class="jumbotron" itemscope itemtype="http://schema.org/WPHeader">
 				<h1 itemprop="name">PollEndpoint</h1>
-				<p class="lead" itemprop="description">High performance, open-source questionnaire platform by Licson Lee.</p>
-				<a class="btn btn-large btn-success" href="/create">Try it today!</a>
+				<p class="lead" itemprop="description">Search result for &quot;<%= keyword %>&quot;</p>
 			</div>
-			<hr>
 			<form class="form-search" action="/search" method="get">
 				<div class="input-append">
-					<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." />
+					<input type="text" class="input-medium search-query" name="q" placeholder="Search polls..." value="<%= keyword %>" />
 					<input type="submit" class="btn" value="Search" />
 				</div>
 			</form>
-			<div class="row-fluid">
-				<div class="span6">
-					<h3>Latest Polls</h3>
-					<% if(polls.latest.length){ %>
-					<ul class="nav nav-pills nav-stacked">
-					<%
-						for(var i = 0; i < polls.latest.length; i++){
-					%>
-						<li title="Created at <%= polls.latest[i].created_at %>"><a href="question/<%= polls.latest[i].id %>"><i class="icon-th-list"></i> <%= polls.latest[i].name %></a></li>
-					<% } %>
-					</ul>
-					<% } else { %>
-					<em class="muted">No polls recently</em>
-					<% } %>
+			<div id="search-result" class="content">
+				<%
+					if(result.length == 0){
+				%>
+				<em class="muted">No matched results.</em>
+				<%
+					}
+					else {
+						result.forEach(function(result){
+				%>
+				<div class="media search">
+					<a class="pull-left" href="question/<%= result.id %>">
+						<img src="assets/img/file-64.png" width="49" height="64" />
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading"><a href="question/<%= result.id %>"><%= result.name %></a></h4>
+						<p><%= result.desc %></p>
+					</div>
 				</div>
-				<div class="span6">
-					<h3>Most popular Polls</h3>
-					<% if(polls.popular.length){ %>
-					<ul class="nav nav-pills nav-stacked">
+				<%
+						});
+					}
+				%>
+				<div class="pagination">
 					<%
-						for(var i = 0; i < polls.popular.length; i++){
-					%>
-						<li title="Created at <%= polls.popular[i].created_at %>"><a href="question/<%= polls.popular[i].id %>"><i class="icon-th-list"></i> <%= polls.popular[i].name %></a></li>
-					<% } %>
-					</ul>
-					<% } else { %>
-					<em class="muted">No polls recently</em>
-					<% } %>
+						var output = '<ul>';
+						var pages = Math.ceil(count/limit);
+						for(var i = 1; i < pages+1; i++){
+							if(i+limit < page) continue;
+							if(i+limit == page){
+								var p = page - limit;
+								output += '<li><a href="/search?q='+encodeURIComponent(keyword)+'&page=1">&lt;&lt;</a></li><li><a href="/search?q='+encodeURIComponent(keyword)+'&page='+p+'">&lt;</a></li>';
+							}
+							if(i>page+limit) break;
+							output += '<li><a href="/search?q='+encodeURIComponent(keyword)+'&page='+i+'">'+i+'</a></li>';
+							if(i == page+limit){
+								var p = page + limit;
+								output += '<li><a href="/search?q='+encodeURIComponent(keyword)+'&page='+p+'">&gt;</a></li><li><a href="/search?q='+encodeURIComponent(keyword)+'&page='+pages+'">&gt;&gt;</a></li>';
+							}
+						}
+						output += '</ul>';
+					-%>
+					<%- output %>
 				</div>
 			</div>
-			<hr>
-			<div class="row-fluid marketing">
-				<div class="span6">
-					<h4>High Performance</h4>
-					<p>PollEndpoint uses node.js, a platform for data-intensive applications, to handle the load. It's highly-scalable and event-driven that makes it fast and reliable.</p>
-					
-					<h4>Search engines optimized</h4>
-					<p>PollEndpoint is optimized for search engines to allow your questions to be spread widely.</p>
-					<p>We adopt the use of HTML5 microdata to let search engines have a better understanding of the questions.</p>
-				</div>
-				<div class="span6">
-					<h4>Easy to setup</h4>
-					<p>No accounts required. Just create the questions and that's it. (Statistics are public to everyone)</p>
-					
-					<h4>User-friendly interface</h4>
-					<p>Answer your questions in a natural way! No ads on every page and we'll never have ads.</p>
-					<p>Also, we provide easy-to-read yet advanced statistics to you.</p>
-				</div>
-				<div class="span12">
-					<h4>Follow us on Facebook!</h4>
-					<p>We will post the notices on our Facebook page.</p>
-					<iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FPollendpoint%2F487395521320925&amp;send=false&amp;layout=standard&amp;width=200&amp;show_faces=true&amp;font=tahoma&amp;colorscheme=light&amp;action=recommend&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100%; height:80px;" allowTransparency="true"></iframe>
-				</div>
-			</div>
-			<hr>
 			<div class="footer">
 				<p>&copy; PollEndpoint <%= '2013 - ' + (new Date).getFullYear() == 2013 ? '' : (new Date).getFullYear() %></p>
 			</div>
